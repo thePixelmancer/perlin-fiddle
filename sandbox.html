@@ -6,84 +6,25 @@
       body {
         margin: 0;
         padding: 0;
-        font-family: Arial, sans-serif;
-        background-color: #222;
-        color: #eee;
-      }
-      #status {
-        padding: 10px;
-        background-color: #333;
-        text-align: center;
       }
     </style>
   </head>
   <body>
-    <div id="status">Sandbox Ready</div>
     <script>
-      // Log that the sandbox has loaded
-      console.log('Sandbox: Script loaded and running');
-      
-      // Update status
-      const statusEl = document.getElementById('status');
-      function updateStatus(message) {
-        statusEl.textContent = message;
-        console.log('Sandbox Status:', message);
-      }
-      
-      updateStatus('Waiting for messages...');
-      
-      // Listen for messages from the parent window
-      window.addEventListener('message', (event) => {
-        console.log('Sandbox: Received message', event);
-        
-        // Log the message source for debugging
-        console.log('Message source:', event.source);
-        console.log('Window parent:', window.parent);
-        
+      // Process incoming messages
+      window.addEventListener("message", (event) => {
         // Only accept messages from our parent
-        if (event.source !== window.parent) {
-          console.log('Sandbox: Ignoring message from non-parent source');
-          return;
+        if (event.source !== window.parent) return;
+
+        // Process the text (replace 'angelo' with 'pixelmancer')
+        if (typeof event.data === "string") {
+          try {
+            const result = event.data.replace(/angelo/gi, "pixelmancer");
+            window.parent.postMessage(result, "*");
+          } catch (error) {
+            window.parent.postMessage("Error processing code", "*");
+          }
         }
-        
-        // Handle test message
-        if (event.data === 'TEST_MESSAGE') {
-          console.log('Sandbox: Received test message - connection working!');
-          updateStatus('Connection test successful!');
-          // Send a response back to confirm
-          window.parent.postMessage('SANDBOX_TEST_RESPONSE', '*');
-          return;
-        }
-        
-        updateStatus('Processing code...');
-        
-        try {
-          // Process the code (replace 'angelo' with 'pixelmancer')
-          const processedCode = typeof event.data === 'string' 
-            ? event.data.replace(/angelo/gi, 'pixelmancer')
-            : 'Error: Expected string input';
-          
-          console.log('Sandbox: Processed code', processedCode);
-          
-          // Send the processed code back to the parent
-          window.parent.postMessage(processedCode, '*');
-          updateStatus('Code processed successfully');
-          console.log('Sandbox: Sent processed code back to parent');
-          
-        } catch (error) {
-          const errorMessage = `Error: ${error.message}`;
-          console.error('Sandbox Error:', error);
-          window.parent.postMessage(errorMessage, '*');
-          updateStatus('Error processing code');
-        }
-      });
-      
-      // Notify parent that sandbox is ready
-      window.addEventListener('load', () => {
-        console.log('Sandbox: Window loaded, notifying parent');
-        updateStatus('Ready');
-        // Send a ready message to parent
-        window.parent.postMessage('SANDBOX_READY', '*');
       });
     </script>
   </body>

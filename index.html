@@ -25,7 +25,7 @@
     <div
       id="main"
       class="h-screen flex flex-row bg-gray-900 text-gray-200 gap-3 p-3">
-      <div id="left-panel" class="flex flex-col gap-3 flex-1">
+      <div id="left-panel" class="flex flex-col gap-3 flex-2">
         <div
           id="canvas"
           class="rounded-md flex-1 bg-gray-700 overflow-hidden"></div>
@@ -62,7 +62,7 @@
           </div>
         </div>
       </div>
-      <div id="right-panel" class="flex flex-col bg-gray-800 w-2/5 rounded-md">
+      <div id="right-panel" class="flex flex-col bg-gray-800 flex-1 rounded-md">
         <div id="tabs" class="flex border-b border-gray-700">
           <button
             class="flex-1 tab-button px-16 py-3 text-sm font-medium text-cyan-400 border-b-2 border-cyan-400 hover:text-gray-300 focus:outline-none">
@@ -226,5 +226,12 @@
       }
     </script>
     <script type="module" src="./script/main.js"></script>
+    <!-- Hidden sandbox iframe for secure code execution -->
+    <iframe 
+      id="sandbox-iframe" 
+      sandbox="allow-scripts allow-same-origin"
+      style="display: none;"
+      src="sandbox.html">
+    </iframe>
   </body>
 </html>
