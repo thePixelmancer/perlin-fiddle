@@ -1,0 +1,80 @@
+.CodeMirror {
+  background-color: #1a202c !important;
+  color: #e2e8f0 !important;
+  height: 100% !important;
+}
+.CodeMirror-gutters {
+  background-color: #1a202c !important;
+  border-right: 1px solid #2d3748 !important;
+}
+.CodeMirror-linenumber {
+  color: #4a5568 !important;
+}
+.CodeMirror-linenumber.CodeMirror-gutter-elt {
+  color: #a0aec0 !important;
+}
+.CodeMirror-cursor {
+  border-left: 1px solid #f7fafc !important;
+}
+.CodeMirror-selected {
+  background: #2d3748 !important;
+}
+.cm-comment {
+  color: #718096 !important;
+}
+.cm-keyword,
+.cm-tag {
+  color: #90cdf4 !important;
+}
+.cm-string {
+  color: #f6ad55 !important;
+}
+.cm-number {
+  color: #9f7aea !important;
+}
+.cm-def,
+.cm-variable-2 {
+  color: #fbd38d !important;
+}
+.cm-variable {
+  color: #feb2b2 !important;
+}
+.cm-operator {
+  color: #81e6d9 !important;
+}
+.cm-builtin,
+.cm-attribute {
+  color: #f6e05e !important;
+}
+.CodeMirror-activeline-background {
+  background: #2d3748 !important;
+}
+.CodeMirror-matchingbracket {
+  background: #4a5568 !important;
+  border: 1px solid #2d3748 !important;
+}
+/* Style for the hint menu */
+.CodeMirror-hints {
+  background: #1a202c !important;
+  border: 1px solid #2d3748 !important;
+  color: #e2e8f0 !important;
+}
+.CodeMirror-hint {
+  color: #e2e8f0 !important;
+  padding: 4px 8px !important;
+}
+li.CodeMirror-hint-active {
+  background: #2d3748 !important;
+  color: #90cdf4 !important;
+}
+.CodeMirror-hint-active .cm-completion-detail {
+  color: #a0aec0 !important;
+}
+.CodeMirror-hint-information {
+  background: #1a202c !important;
+  border-color: #2d3748 !important;
+  color: #a0aec0 !important;
+}
+.CodeMirror-hint-information:before {
+  border-bottom-color: #2d3748 !important;
+}

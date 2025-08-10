@@ -7,12 +7,29 @@
     <link rel="icon" type="image/png" href="favicon.png" />
 
     <link rel="stylesheet" href="./dist/styles.css" />
+    <link rel="stylesheet" href="./dist/code_mirror_styles.css" />
+    <!-- CodeMirror CSS -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/codemirror.min.css" />
+    <!-- Material Theme -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/theme/material-darker.min.css" />
+    <!-- JavaScript mode -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/addon/hint/show-hint.min.css" />
   </head>
   <body>
     <div id="main" class="h-screen flex bg-gray-900 text-gray-200 gap-3 p-3">
       <div id="left-panel" class="flex flex-col gap-3 flex-1">
-        <div id="canvas" class="rounded-md flex-1 bg-gray-700 overflow-hidden"></div>
-        <div id="controls" class="flex items-center gap-3 h-24 bg-gray-800 rounded-md p-4">
+        <div
+          id="canvas"
+          class="rounded-md flex-1 bg-gray-700 overflow-hidden"></div>
+        <div
+          id="controls"
+          class="flex items-center gap-3 h-24 bg-gray-800 rounded-md p-4">
           <div class="flex flex-col gap-3 flex-2">
             <label for="worldSizeInput" class="mb-1">World Size:</label>
             <input
@@ -44,7 +61,7 @@
         </div>
       </div>
       <div id="right-panel" class="flex flex-col bg-gray-800 w-2/5 rounded-md">
-        <textarea id="code-input" class="flex-1 border-2"></textarea>
+        <div id="code-input" class="flex-1 overflow-auto"></div>
         <div id="button-group" class="flex gap-3 p-3">
           <button class="bg-cyan-600 rounded-md p-2">Apply Code</button>
           <button class="bg-cyan-600 rounded-md p-2">Copy Molang</button>
@@ -60,8 +77,16 @@
         </div>
       </div>
     </div>
+
     <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.7.0/p5.min.js"></script>
-    <script src="./script/code_mirror.js"></script>
+    <!-- CodeMirror JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/codemirror.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/mode/javascript/javascript.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/addon/edit/matchbrackets.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/addon/hint/show-hint.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/addon/hint/javascript-hint.min.js"></script>
+    <script src="./script/codemirror-setup.js"></script>
+
     <script src="./script/load_example.js"></script>
     <script src="./script/copy_code.js"></script>
     <script src="./script/main.js"></script>
