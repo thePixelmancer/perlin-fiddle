@@ -28,7 +28,11 @@
       <div id="left-panel" class="flex flex-col gap-3 flex-2">
         <div
           id="canvas"
-          class="rounded-md flex-1 bg-gray-700 overflow-hidden"></div>
+          class="relative w-full h-full min-h-[200px] rounded-md bg-gray-700">
+          <div class="absolute inset-0 w-full h-full">
+            <!-- p5 canvas will be inserted here -->
+          </div>
+        </div>
         <div
           id="controls"
           class="flex items-center gap-3 h-24 bg-gray-800 rounded-md p-4">
@@ -227,10 +231,10 @@
     </script>
     <script type="module" src="./script/main.js"></script>
     <!-- Hidden sandbox iframe for secure code execution -->
-    <iframe 
-      id="sandbox-iframe" 
+    <iframe
+      id="sandbox-iframe"
       sandbox="allow-scripts allow-same-origin"
-      style="display: none;"
+      style="display: none"
       src="sandbox.html">
     </iframe>
   </body>

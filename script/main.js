@@ -29,10 +29,8 @@ function processCode(code) {
 // Initialize p5
 new p5((p) => {
   p.setup = () => {
-    const canvas = p.createCanvas(
-      document.getElementById("canvas").offsetWidth,
-      document.getElementById("canvas").offsetHeight
-    );
+    const canvasDiv = document.querySelector("#canvas > div");
+    p.createCanvas(canvasDiv.offsetWidth, canvasDiv.offsetHeight).parent(canvasDiv);
     p.textAlign(p.CENTER, p.CENTER);
     p.textSize(24);
     p.fill(255);
@@ -45,11 +43,14 @@ new p5((p) => {
   };
 
   p.windowResized = () => {
-    const canvasDiv = document.getElementById("canvas");
+    const canvasDiv = document.querySelector("#canvas > div");
     if (canvasDiv) {
       p.resizeCanvas(canvasDiv.offsetWidth, canvasDiv.offsetHeight);
     }
   };
+  
+  // Initial resize to ensure proper sizing
+  p.windowResized();
 }, "canvas");
 
 // Set up the run button
