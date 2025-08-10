@@ -63,20 +63,20 @@
         </div>
       </div>
       <div id="right-panel" class="flex flex-col bg-gray-800 w-2/5 rounded-md">
-        <div id="tabs" class="flex border-b border-gray-700 pt-3">
+        <div id="tabs" class="flex border-b border-gray-700">
           <button
-            class="tab-button px-16 py-2 text-sm font-medium text-cyan-400 border-b-2 border-cyan-400 hover:text-gray-300 focus:outline-none">
+            class="flex-1 tab-button px-16 py-3 text-sm font-medium text-cyan-400 border-b-2 border-cyan-400 hover:text-gray-300 focus:outline-none">
             Molang Editor
           </button>
           <button
-            class="tab-button px-16 py-2 text-sm font-medium text-gray-400 border-b-2 border-transparent hover:text-gray-300 focus:outline-none">
+            class="flex-1 tab-button px-16 py-3 text-sm font-medium text-gray-400 border-b-2 border-transparent hover:text-gray-300 focus:outline-none">
             Documentation
           </button>
         </div>
         <div id="code-input" class="flex-1 overflow-auto"></div>
         <div
           id="documentation"
-          class="flex-1 overflow-auto bg-gray-800 p-6 text-gray-200">
+          class="hidden flex-1 overflow-auto bg-gray-800 p-6 text-gray-200">
           <div class="max-w-3xl mx-auto">
             <h1 class="text-2xl font-bold text-cyan-400 mb-6">
               Molang Documentation
@@ -171,7 +171,7 @@
               class="bg-white opacity-0 group-active:opacity-10 rounded-md transition-opacity duration-150"></span>
           </button>
           <button
-            class="bg-cyan-600 hover:bg-cyan-700 active:scale-95 focus:outline-none rounded-md p-2 transition-all duration-150 ease-out hover:shadow-lg active:shadow-inner flex items-center gap-2">
+            class="bg-gray-900 outline-1 outline-gray-700 hover:outline-gray-500 active:scale-95 rounded-md p-2 transition-all duration-150 ease-out hover:shadow-lg active:shadow-inner flex items-center gap-2">
             <svg
               xmlns="http://www.w3.org/2000/svg"
               fill="none"
@@ -191,7 +191,7 @@
           </button>
           <select
             id="exampleSelect"
-            class="bg-cyan-600 hover:bg-cyan-700 active:scale-[0.98] focus:outline-none rounded-md p-2 pr-8 appearance-none cursor-pointer transition-all duration-150 ease-out hover:shadow-lg active:shadow-inner">
+            class="bg-gray-900 outline-1 outline-gray-700 hover:outline-gray-500 active:scale-[0.98] rounded-md p-2 pr-8 appearance-none cursor-pointer transition-all duration-150 ease-out hover:shadow-lg active:shadow-inner">
             <option value="">Load Example...</option>
             <option value="scattered_islands.js">Scattered Islands</option>
             <option value="terrain.js">Terrain</option>

@@ -4,8 +4,9 @@ document.addEventListener("DOMContentLoaded", () => {
   const codeInput = document.getElementById("code-input");
   const documentation = document.getElementById("documentation");
 
-  // Hide documentation by default
-  documentation.style.display = "none";
+  // Initialize with Molang Editor active
+  codeInput.classList.remove("hidden");
+  documentation.classList.add("hidden");
 
   tabsContainer.addEventListener("click", (e) => {
     const clickedTab = e.target.closest(".tab-button");
@@ -24,11 +25,11 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // Toggle sections based on which tab was clicked
     if (clickedTab.textContent.trim() === "Molang Editor") {
-      codeInput.style.display = "block";
-      documentation.style.display = "none";
+      codeInput.classList.remove("hidden");
+      documentation.classList.add("hidden");
     } else if (clickedTab.textContent.trim() === "Documentation") {
-      codeInput.style.display = "none";
-      documentation.style.display = "block";
+      codeInput.classList.add("hidden");
+      documentation.classList.remove("hidden");
     }
   });
 });
