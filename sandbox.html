@@ -7,14 +7,24 @@
         // Only accept messages from our parent
         if (event.source !== window.parent) return;
 
-        // Process the text (replace 'angelo' with 'pixelmancer')
-        if (typeof event.data === "string") {
-          try {
-            const result = event.data.replace(/angelo/gi, "pixelmancer");
-            window.parent.postMessage(result, "*");
-          } catch (error) {
-            window.parent.postMessage("Error processing code", "*");
+        try {
+          let result;
+
+          if (event.data && typeof event.data === "object") {
+            // New format with code and worldSize
+            const { code, worldSize } = event.data;
+            console.log("Received worldSize:", worldSize);
+            // For now, just pass through the code with the replacement
+            // In a real implementation, you would use worldSize in your processing
+            result = code.replace(/angelo/gi, "pixelmancer");
+          } else {
+            throw new Error("Invalid message format");
           }
+
+          window.parent.postMessage(result, "*");
+        } catch (error) {
+          console.error("Error processing message:", error);
+          window.parent.postMessage(`Error: ${error.message}`, "*");
         }
       });
     </script>

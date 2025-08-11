@@ -19,26 +19,22 @@ window.addEventListener("message", (event) => {
   }
 });
 
-// Process code through sandbox
-function processCode(code) {
-  if (SANDBOX?.contentWindow) {
-    SANDBOX.contentWindow.postMessage(code, "*");
-  }
-}
-
 // Initialize p5
 new p5((p) => {
   p.setup = () => {
     const canvasDiv = document.querySelector("#canvas > div");
-    p.createCanvas(canvasDiv.offsetWidth, canvasDiv.offsetHeight).parent(canvasDiv);
-    p.textAlign(p.CENTER, p.CENTER);
-    p.textSize(24);
-    p.fill(255);
-    p.noStroke();
+    p.createCanvas(canvasDiv.offsetWidth, canvasDiv.offsetHeight).parent(
+      canvasDiv
+    );
   };
 
   p.draw = () => {
+    p.noSmooth();
     p.background(0);
+    p.textSize(24);
+    p.textAlign(p.CENTER, p.CENTER);
+    p.fill(255);
+    p.noStroke();
     p.text(STATE.text, p.width / 2, p.height / 2);
   };
 
@@ -48,14 +44,24 @@ new p5((p) => {
       p.resizeCanvas(canvasDiv.offsetWidth, canvasDiv.offsetHeight);
     }
   };
-  
+
   // Initial resize to ensure proper sizing
   p.windowResized();
 }, "canvas");
-
+/* -------------------------------------------------------------------------- */
 // Set up the run button
 document.getElementById("run-button")?.addEventListener("click", () => {
+  const worldSize =
+    parseInt(document.getElementById("worldSizeInput").value) || 512;
+  const codeEditorText = window.editor.getValue();
+
   if (window.editor) {
-    processCode(editor.getValue());
+    sendToSandbox({ code: codeEditorText, worldSize });
   }
 });
+// Process code through sandbox
+function sendToSandbox(object) {
+  if (SANDBOX?.contentWindow) {
+    SANDBOX.contentWindow.postMessage(object, "*");
+  }
+}
