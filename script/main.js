@@ -19,7 +19,6 @@ window.addEventListener("message", (event) => {
     SKETCH_CONTENT.pixelArray = event.data.pixelArray;
   }
 });
-
 // Create a p5.Image from a pixel array
 // pixelArray should be a Uint8ClampedArray or array with RGBA values
 function imageFromArray(sketch, pixelArray) {
@@ -37,12 +36,12 @@ function imageFromArray(sketch, pixelArray) {
 
   const img = sketch.createImage(size, size);
   img.loadPixels();
-  
+
   // Copy pixel data
   for (let i = 0; i < pixelArray.length; i++) {
     img.pixels[i] = pixelArray[i];
   }
-  
+
   img.updatePixels();
   return img;
 }

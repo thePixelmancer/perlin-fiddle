@@ -35,24 +35,24 @@ CodeMirror.registerHelper("hint", "customHint", function (editor) {
 });
 
 // Combine JavaScript and custom hints
-// CodeMirror.registerHelper(
-//   "hint",
-//   "javascriptCustom",
-//   function (editor, options) {
-//     const jsHints = CodeMirror.hint.javascript(editor, options);
-//     const customHintsResult = CodeMirror.hint.customHint(editor, options);
+CodeMirror.registerHelper(
+  "hint",
+  "javascriptCustom",
+  function (editor, options) {
+    const jsHints = CodeMirror.hint.javascript(editor, options);
+    const customHintsResult = CodeMirror.hint.customHint(editor, options);
 
-//     if (!jsHints && !customHintsResult) return null;
-//     if (!jsHints) return customHintsResult;
-//     if (!customHintsResult) return jsHints;
+    if (!jsHints && !customHintsResult) return null;
+    if (!jsHints) return customHintsResult;
+    if (!customHintsResult) return jsHints;
 
-//     return {
-//       list: jsHints.list.concat(customHintsResult.list),
-//       from: jsHints.from,
-//       to: jsHints.to,
-//     };
-//   }
-// );
+    return {
+      list: jsHints.list.concat(customHintsResult.list),
+      from: jsHints.from,
+      to: jsHints.to,
+    };
+  }
+);
 
 // Initialize CodeMirror with Tailwind color scheme
 const editor = CodeMirror(document.getElementById("code-input"), {
