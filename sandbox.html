@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!doctype html>
 <html>
   <body>
     <script>
@@ -7,16 +7,126 @@
         // Only accept messages from our parent
         if (event.source !== window.parent) return;
 
+        function normalizePixels(pixelArray) {
+          const result = [];
+          for (const pixel of pixelArray) {
+            result.push(Math.round(pixel.r * 255));
+            result.push(Math.round(pixel.g * 255));
+            result.push(Math.round(pixel.b * 255));
+            result.push(255);
+          }
+          return result;
+        }
+
         try {
           let result;
 
           if (event.data && typeof event.data === "object") {
             // New format with code and worldSize
-            const { code, worldSize } = event.data;
+            const { userInput, worldSize } = event.data;
             console.log("Received worldSize:", worldSize);
-            // For now, just pass through the code with the replacement
-            // In a real implementation, you would use worldSize in your processing
-            result = code.replace(/angelo/gi, "pixelmancer");
+
+            const userFunction = new Function(
+              "x",
+              "y",
+              `
+            // Create math object with all math functions
+            const math = {
+              abs: (value) => Math.abs(value),
+              sin: (value) => Math.sin(value),
+              cos: (value) => Math.cos(value),
+              clamp: (value, min, max) => Math.max(min, Math.min(max, value)),
+              ceil: (value) => Math.ceil(value),
+              floor: (value) => Math.floor(value),
+              trunc: (value) => Math.trunc(value),
+              round: (value) => Math.round(value),
+              mod: (value, denominator) => value % denominator,
+              pow: (base, exponent) => Math.pow(base, exponent),
+              sqrt: (value) => Math.sqrt(value),
+              exp: (value) => Math.exp(value),
+              pi: Math.PI,
+              max: (a, b) => Math.max(a, b),
+              min: (a, b) => Math.min(a, b),
+              min_angle: (value) => {
+                // Normalize angle to [-π, π]
+                let angle = value % (2 * Math.PI);
+                if (angle > Math.PI) angle -= 2 * Math.PI;
+                if (angle < -Math.PI) angle += 2 * Math.PI;
+                return angle;
+              },
+              asin: (value) => Math.asin(value),
+              acos: (value) => Math.acos(value),
+              atan: (value) => Math.atan(value),
+              atan2: (y, x) => Math.atan2(y, x),
+              random: (low, high) => Math.random() * (high - low) + low,
+              random_integer: (low, high) => Math.floor(Math.random() * (high - low + 1)) + low,
+              die_roll: (num, low, high) => {
+                let sum = 0;
+                for (let i = 0; i < num; i++) {
+                  sum += Math.random() * (high - low) + low;
+                }
+                return sum / num;
+              },
+              die_roll_integer: (num, low, high) => {
+                let sum = 0;
+                for (let i = 0; i < num; i++) {
+                  sum += Math.floor(Math.random() * (high - low + 1)) + low;
+                }
+                return Math.floor(sum / num);
+              },
+              hermite_blend: (value) => value * value * (3 - 2 * value),
+              lerp: (start, end, t) => start + (end - start) * t,
+              lerprotate: (start, end, t) => {
+                // Linear interpolation for angles (shortest path)
+                let diff = end - start;
+                if (diff > Math.PI) diff -= 2 * Math.PI;
+                if (diff < -Math.PI) diff += 2 * Math.PI;
+                return start + diff * t;
+              },
+              ln: (value) => Math.log(value)
+            };
+
+            let query = Object.freeze({
+              noise: (x, y) => {return noise(x, y) * 2 - 1;},
+            });
+            let variable = {
+              originx: x,
+              originz: y,
+              worldx: x,
+              worldz: y,
+            };
+            let v = variable; // Alias for variable - both reference the same object
+            let q = query;
+            
+            // Execute user's custom code
+            ${userInput}
+            
+            return 0;
+        `,
+            );
+
+            // Loop through every pixel based on worldSize
+            const pixelArray = [];
+
+            for (let y = 0; y < worldSize; y++) {
+              for (let x = 0; x < worldSize; x++) {
+                // Call the user function with x and y coordinates
+                const colorResult = userFunction(x, y);
+
+                // If the result is an RGB object, add it to the array
+                if (colorResult && typeof colorResult === "object" && "r" in colorResult && "g" in colorResult && "b" in colorResult) {
+                  pixelArray.push(colorResult);
+                } else if (typeof colorResult === "number" && colorResult >= 0 && colorResult <= 1) {
+                  // Treat as grayscale value
+                  pixelArray.push({ r: colorResult, g: colorResult, b: colorResult });
+                }
+              }
+            }
+
+            result = {
+              text: "Success!",
+              pixelArray: normalizePixels(pixelArray), // Normalize the pixels
+            };
           } else {
             throw new Error("Invalid message format");
           }
@@ -24,7 +134,7 @@
           window.parent.postMessage(result, "*");
         } catch (error) {
           console.error("Error processing message:", error);
-          window.parent.postMessage(`Error: ${error.message}`, "*");
+          window.parent.postMessage({ text: `Error: ${error.message}`, pixelArray: [] }, "*");
         }
       });
     </script>
