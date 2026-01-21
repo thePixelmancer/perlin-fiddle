@@ -6,6 +6,20 @@ const SKETCH_CONTENT = {
   pixelArray: [],
 };
 
+// Camera state for pan and zoom
+const CAMERA = {
+  x: 0,
+  y: 0,
+  zoom: 1,
+};
+
+// Mouse state for panning
+const MOUSE_STATE = {
+  isDragging: false,
+  lastX: 0,
+  lastY: 0,
+};
+
 // Get the sandbox iframe
 const SANDBOX = document.getElementById("sandbox-iframe");
 
@@ -51,17 +65,22 @@ new p5((sketch) => {
   sketch.setup = () => {
     const canvasDiv = document.querySelector("#canvas > div");
     sketch.createCanvas(canvasDiv.offsetWidth, canvasDiv.offsetHeight).parent(canvasDiv);
+    sketch.noSmooth();
   };
 
   sketch.draw = () => {
-    sketch.noSmooth();
     sketch.background(0);
 
     // Draw image if pixelArray exists and has data
     if (SKETCH_CONTENT.pixelArray && SKETCH_CONTENT.pixelArray.length > 0) {
       const imageData = imageFromArray(sketch, SKETCH_CONTENT.pixelArray);
       if (imageData) {
+        // Apply transformations (translate and scale)
+        sketch.push();
+        sketch.translate(CAMERA.x, CAMERA.y);
+        sketch.scale(CAMERA.zoom);
         sketch.image(imageData, 10, 10);
+        sketch.pop();
       }
     }
 
@@ -78,6 +97,59 @@ new p5((sketch) => {
     if (canvasDiv) {
       sketch.resizeCanvas(canvasDiv.offsetWidth, canvasDiv.offsetHeight);
     }
+  };
+
+  // Mouse wheel for zoom
+  sketch.mouseWheel = (event) => {
+    const canvasDiv = document.querySelector("#canvas > div");
+    const rect = canvasDiv.getBoundingClientRect();
+    const isOverCanvas = sketch.mouseX >= 0 && sketch.mouseX <= sketch.width && sketch.mouseY >= 0 && sketch.mouseY <= sketch.height;
+
+    if (isOverCanvas) {
+      const zoomSpeed = 0.4;
+      const oldZoom = CAMERA.zoom;
+      CAMERA.zoom *= 1 - event.delta * zoomSpeed * 0.001;
+      CAMERA.zoom = Math.max(0.1, Math.min(CAMERA.zoom, 10)); // Clamp zoom between 0.1x and 10x
+
+      // Zoom towards mouse position
+      const zoomChange = CAMERA.zoom - oldZoom;
+      CAMERA.x -= (sketch.mouseX - CAMERA.x) * (zoomChange / oldZoom);
+      CAMERA.y -= (sketch.mouseY - CAMERA.y) * (zoomChange / oldZoom);
+
+      event.preventDefault();
+      return false;
+    }
+  };
+
+  // Mouse events for panning
+  sketch.mousePressed = () => {
+    const canvasDiv = document.querySelector("#canvas > div");
+    const isOverCanvas = sketch.mouseX >= 0 && sketch.mouseX <= sketch.width && sketch.mouseY >= 0 && sketch.mouseY <= sketch.height;
+
+    if (isOverCanvas) {
+      MOUSE_STATE.isDragging = true;
+      MOUSE_STATE.lastX = sketch.mouseX;
+      MOUSE_STATE.lastY = sketch.mouseY;
+      return false;
+    }
+  };
+
+  sketch.mouseDragged = () => {
+    if (MOUSE_STATE.isDragging) {
+      const deltaX = sketch.mouseX - MOUSE_STATE.lastX;
+      const deltaY = sketch.mouseY - MOUSE_STATE.lastY;
+
+      CAMERA.x += deltaX;
+      CAMERA.y += deltaY;
+
+      MOUSE_STATE.lastX = sketch.mouseX;
+      MOUSE_STATE.lastY = sketch.mouseY;
+      return false;
+    }
+  };
+
+  sketch.mouseReleased = () => {
+    MOUSE_STATE.isDragging = false;
   };
 
   // Initial resize to ensure proper sizing

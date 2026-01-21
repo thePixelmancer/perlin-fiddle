@@ -1,7 +1,7 @@
-<!doctype html>
+<!DOCTYPE html>
 <html>
   <body>
-    <script src="./script/perlin.js"></script>
+    <script src="./script/p5.js"></script>
     <script>
       // 2D Perlin Noise Implementation
       function normalizePixels(pixelArray) {
@@ -28,6 +28,16 @@
             // New format with code and worldSize
             const { userInput, worldSize } = event.data;
             console.log("Received data:", event.data);
+
+
+            // Create a minimal p5 instance just for noise functions
+            const p5Instance = new p5(function (p) {
+              p.setup = function () {
+                // Minimal setup - we just need the noise functions
+                p.noiseSeed(12345);
+                p.noCanvas();
+              };
+            });
 
             // Create shared math and query objects outside the function to avoid recreating them per pixel
             const math = {
@@ -85,9 +95,9 @@
             Object.freeze(math);
 
             const query = {
-              noise: (x, y) => noise.perlin2(x, y),
-              perlin: (x, y) => noise.perlin2(x, y),
-              simplex: (x, y) => noise.simplex2(x, y),
+              noise: (x, y) => {
+                return p5Instance.noise(x, y) * 2 - 1;
+              }, // convert from 0-1 to -1 to 1
             };
             Object.freeze(query);
 
@@ -110,7 +120,7 @@
             ${userInput}
             
             return 0;
-        `,
+        `
             );
 
             // Loop through every pixel based on worldSize
