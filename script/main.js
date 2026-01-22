@@ -35,7 +35,7 @@ function centerAndFitSketch(sketch, imageSize) {
   const padding = 40;
   const scaleX = (canvasWidth - padding * 2) / imageSize;
   const scaleY = (canvasHeight - padding * 2) / imageSize;
-  const fitZoom = Math.min(scaleX, scaleY, 20); // Max zoom 20x
+  const fitZoom = Math.min(scaleX, scaleY, 30); // Max zoom 30x
 
   // Center the image
   CAMERA.x = (canvasWidth - imageSize * fitZoom) / 2;
@@ -142,7 +142,7 @@ new p5((sketch) => {
       const zoomSpeed = 0.4;
       const oldZoom = CAMERA.zoom;
       CAMERA.zoom *= 1 - event.delta * zoomSpeed * 0.001;
-      CAMERA.zoom = Math.max(0.1, Math.min(CAMERA.zoom, 20)); // Clamp zoom between 0.1x and 20x
+      CAMERA.zoom = Math.max(0.1, Math.min(CAMERA.zoom, 50)); // Clamp zoom between 0.1x and 50x
 
       // Zoom towards mouse position
       const zoomChange = CAMERA.zoom - oldZoom;
