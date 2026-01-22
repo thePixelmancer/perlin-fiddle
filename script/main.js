@@ -11,6 +11,7 @@ const CAMERA = {
   x: 0,
   y: 0,
   zoom: 1,
+  needsCentering: true, // Flag to center on new content
 };
 
 // Mouse state for panning
@@ -23,6 +24,26 @@ const MOUSE_STATE = {
 // Get the sandbox iframe
 const SANDBOX = document.getElementById("sandbox-iframe");
 
+// Function to center and fit sketch to canvas
+function centerAndFitSketch(sketch, imageSize) {
+  if (!imageSize) return;
+
+  const canvasWidth = sketch.width;
+  const canvasHeight = sketch.height;
+
+  // Calculate zoom to fit image with some padding
+  const padding = 40;
+  const scaleX = (canvasWidth - padding * 2) / imageSize;
+  const scaleY = (canvasHeight - padding * 2) / imageSize;
+  const fitZoom = Math.min(scaleX, scaleY, 20); // Max zoom 20x
+
+  // Center the image
+  CAMERA.x = (canvasWidth - imageSize * fitZoom) / 2;
+  CAMERA.y = (canvasHeight - imageSize * fitZoom) / 2;
+  CAMERA.zoom = fitZoom;
+  CAMERA.needsCentering = false;
+}
+
 // Handle messages from sandbox
 window.addEventListener("message", (event) => {
   // Only process messages from our sandbox
@@ -33,6 +54,7 @@ window.addEventListener("message", (event) => {
       case "pixelArray":
         SKETCH_CONTENT.pixelArray = event.data.message;
         SKETCH_CONTENT.text = ""; // Clear any previous error text
+        CAMERA.needsCentering = true; // Flag to center new content
         break;
       case "error":
         SKETCH_CONTENT.text = event.data.message;
@@ -83,11 +105,16 @@ new p5((sketch) => {
     if (SKETCH_CONTENT.pixelArray && SKETCH_CONTENT.pixelArray.length > 0) {
       const imageData = imageFromArray(sketch, SKETCH_CONTENT.pixelArray);
       if (imageData) {
+        // Center and fit if this is new content
+        if (CAMERA.needsCentering) {
+          centerAndFitSketch(sketch, imageData.width);
+        }
+
         // Apply transformations (translate and scale)
         sketch.push();
         sketch.translate(CAMERA.x, CAMERA.y);
         sketch.scale(CAMERA.zoom);
-        sketch.image(imageData, 10, 10);
+        sketch.image(imageData, 0, 0);
         sketch.pop();
       }
     }
@@ -109,15 +136,13 @@ new p5((sketch) => {
 
   // Mouse wheel for zoom
   sketch.mouseWheel = (event) => {
-    const canvasDiv = document.querySelector("#canvas > div");
-    const rect = canvasDiv.getBoundingClientRect();
     const isOverCanvas = sketch.mouseX >= 0 && sketch.mouseX <= sketch.width && sketch.mouseY >= 0 && sketch.mouseY <= sketch.height;
 
     if (isOverCanvas) {
       const zoomSpeed = 0.4;
       const oldZoom = CAMERA.zoom;
       CAMERA.zoom *= 1 - event.delta * zoomSpeed * 0.001;
-      CAMERA.zoom = Math.max(0.1, Math.min(CAMERA.zoom, 10)); // Clamp zoom between 0.1x and 10x
+      CAMERA.zoom = Math.max(0.1, Math.min(CAMERA.zoom, 20)); // Clamp zoom between 0.1x and 20x
 
       // Zoom towards mouse position
       const zoomChange = CAMERA.zoom - oldZoom;
@@ -131,7 +156,6 @@ new p5((sketch) => {
 
   // Mouse events for panning
   sketch.mousePressed = () => {
-    const canvasDiv = document.querySelector("#canvas > div");
     const isOverCanvas = sketch.mouseX >= 0 && sketch.mouseX <= sketch.width && sketch.mouseY >= 0 && sketch.mouseY <= sketch.height;
 
     if (isOverCanvas) {
