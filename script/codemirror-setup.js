@@ -23,9 +23,7 @@ CodeMirror.registerHelper("hint", "customHint", function (editor) {
   const currentWord = token.string.trim();
 
   // Filter hints based on current word
-  const filteredHints = customHints.filter((hint) =>
-    hint.text.toLowerCase().includes(currentWord.toLowerCase())
-  );
+  const filteredHints = customHints.filter((hint) => hint.text.toLowerCase().includes(currentWord.toLowerCase()));
 
   return {
     list: filteredHints.length > 0 ? filteredHints : customHints,
@@ -35,24 +33,33 @@ CodeMirror.registerHelper("hint", "customHint", function (editor) {
 });
 
 // Combine JavaScript and custom hints
-CodeMirror.registerHelper(
-  "hint",
-  "javascriptCustom",
-  function (editor, options) {
-    const jsHints = CodeMirror.hint.javascript(editor, options);
-    const customHintsResult = CodeMirror.hint.customHint(editor, options);
+CodeMirror.registerHelper("hint", "javascriptCustom", function (editor, options) {
+  const jsHints = CodeMirror.hint.javascript(editor, options);
+  const customHintsResult = CodeMirror.hint.customHint(editor, options);
 
-    if (!jsHints && !customHintsResult) return null;
-    if (!jsHints) return customHintsResult;
-    if (!customHintsResult) return jsHints;
+  if (!jsHints && !customHintsResult) return null;
+  if (!jsHints) return customHintsResult;
+  if (!customHintsResult) return jsHints;
 
-    return {
-      list: jsHints.list.concat(customHintsResult.list),
-      from: jsHints.from,
-      to: jsHints.to,
-    };
-  }
-);
+  return {
+    list: jsHints.list.concat(customHintsResult.list),
+    from: jsHints.from,
+    to: jsHints.to,
+  };
+});
+
+// Default starting code
+const defaultCode = `// Generate a simple noise pattern
+// Try modifying this code to create different patterns!
+
+v.noise_value = q.noise(v.originx * 0.01, v.originz * 0.01);
+
+// Return RGB color object
+return {
+  r: v.noise_value * 0.5 + 0.5,  // Red channel
+  g: v.noise_value * 0.3 + 0.4,  // Green channel  
+  b: v.noise_value * 0.8 + 0.2   // Blue channel
+};`;
 
 // Initialize CodeMirror with Tailwind color scheme
 const editor = CodeMirror(document.getElementById("code-input"), {
@@ -65,6 +72,7 @@ const editor = CodeMirror(document.getElementById("code-input"), {
   indentUnit: 2,
   tabSize: 2,
   styleActiveLine: true,
+  value: defaultCode, // Set default starting code
   extraKeys: {
     "Ctrl-Space": function (cm) {
       cm.showHint({

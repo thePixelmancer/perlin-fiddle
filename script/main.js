@@ -28,9 +28,17 @@ window.addEventListener("message", (event) => {
   // Only process messages from our sandbox
   if (event.source !== SANDBOX.contentWindow) return;
 
-  if (typeof event.data === "object") {
-    SKETCH_CONTENT.text = event.data.text;
-    SKETCH_CONTENT.pixelArray = event.data.pixelArray;
+  if (typeof event.data === "object" && event.data.type) {
+    switch (event.data.type) {
+      case "pixelArray":
+        SKETCH_CONTENT.pixelArray = event.data.message;
+        SKETCH_CONTENT.text = ""; // Clear any previous error text
+        break;
+      case "error":
+        SKETCH_CONTENT.text = event.data.message;
+        SKETCH_CONTENT.pixelArray = []; // Clear pixel array on error
+        break;
+    }
   }
 });
 // Create a p5.Image from a pixel array

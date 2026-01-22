@@ -123,11 +123,11 @@ function createUserFunction(userInput) {
 }
 
 // Process pixel results
-function processPixelResult(colorResult, math) {
+function processPixelResult(colorResult) {
   if (colorResult && typeof colorResult === "object") {
     return { r: colorResult.r ?? 0, g: colorResult.g ?? 0, b: colorResult.b ?? 0 };
   } else if (typeof colorResult === "number") {
-    const clampedColorResult = math.clamp(colorResult, 0, 1);
+    const clampedColorResult = Math.max(0, Math.min(1, colorResult));
     return { r: clampedColorResult, g: clampedColorResult, b: clampedColorResult };
   }
   return { r: 0, g: 0, b: 0 };
@@ -137,7 +137,6 @@ function processPixelResult(colorResult, math) {
 window.addEventListener("message", (event) => {
   // Validate message source
   if (event.source !== window.parent) return;
-  if (!event.data || typeof event.data !== "object") return;
 
   const restoreEnvironment = createSecureEnvironment();
 
@@ -163,17 +162,16 @@ window.addEventListener("message", (event) => {
     for (let y = 0; y < worldSize; y++) {
       for (let x = 0; x < worldSize; x++) {
         const colorResult = userFunction(x, y, math, query);
-        pixelArray.push(processPixelResult(colorResult, math));
+        pixelArray.push(processPixelResult(colorResult));
       }
     }
 
-    const result = { text: "", pixelArray: normalizePixels(pixelArray) };
-    window.parent.postMessage(result, "*");
+    window.parent.postMessage({ type: "pixelArray", message: normalizePixels(pixelArray) }, "*");
   } catch (error) {
     window.parent.postMessage(
       {
-        text: `Error: ${error.message}`,
-        pixelArray: [],
+        type: "error",
+        message: `Error: ${error.message}`,
       },
       "*"
     );
