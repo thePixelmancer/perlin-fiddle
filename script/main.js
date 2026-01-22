@@ -2,7 +2,7 @@ import p5 from "p5";
 
 // Global state
 const SKETCH_CONTENT = {
-  text: "Type something and click Run!",
+  text: "Type code and click Run!",
   pixelArray: [],
 };
 
@@ -85,11 +85,11 @@ new p5((sketch) => {
     }
 
     // Draw text
-    sketch.textSize(24);
-    sketch.textAlign(sketch.CENTER, sketch.CENTER);
+    sketch.textSize(16);
+    sketch.textAlign(sketch.RIGHT, sketch.BOTTOM);
     sketch.fill(255);
     sketch.noStroke();
-    sketch.text(SKETCH_CONTENT.text, sketch.width / 2, sketch.height / 2);
+    sketch.text(SKETCH_CONTENT.text, sketch.width - 10, sketch.height - 10);
   };
 
   sketch.windowResized = () => {

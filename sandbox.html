@@ -18,95 +18,113 @@
       }
       // Process incoming messages
       window.addEventListener("message", (event) => {
+        let result;
+        // EARLY RETURNS
         // Only accept messages from our parent
-        if (event.source !== window.parent) return;
+        if (event.source !== window.parent) {
+          return;
+        }
+        if (!event.data) {
+          return;
+        }
+        if (typeof event.data !== "object") {
+          return;
+        }
 
         try {
-          let result;
+          
 
-          if (event.data && typeof event.data === "object") {
-            // New format with code and worldSize
-            const { userInput, worldSize } = event.data;
-            console.log("Received data:", event.data);
+          // New format with code and worldSize
+          const { userInput, worldSize } = event.data;
 
-
-            // Create a minimal p5 instance just for noise functions
-            const p5Instance = new p5(function (p) {
-              p.setup = function () {
-                // Minimal setup - we just need the noise functions
-                p.noiseSeed(12345);
-                p.noCanvas();
-              };
-            });
-
-            // Create shared math and query objects outside the function to avoid recreating them per pixel
-            const math = {
-              abs: Math.abs,
-              sin: Math.sin,
-              cos: Math.cos,
-              clamp: (value, min, max) => Math.max(min, Math.min(max, value)),
-              ceil: Math.ceil,
-              floor: Math.floor,
-              trunc: Math.trunc,
-              round: Math.round,
-              mod: (value, denominator) => value % denominator,
-              pow: Math.pow,
-              sqrt: Math.sqrt,
-              exp: Math.exp,
-              pi: Math.PI,
-              max: Math.max,
-              min: Math.min,
-              min_angle: (value) => {
-                let angle = value % (2 * Math.PI);
-                if (angle > Math.PI) angle -= 2 * Math.PI;
-                if (angle < -Math.PI) angle += 2 * Math.PI;
-                return angle;
-              },
-              asin: Math.asin,
-              acos: Math.acos,
-              atan: Math.atan,
-              atan2: Math.atan2,
-              random: (low, high) => Math.random() * (high - low) + low,
-              random_integer: (low, high) => Math.floor(Math.random() * (high - low + 1)) + low,
-              die_roll: (num, low, high) => {
-                let sum = 0;
-                for (let i = 0; i < num; i++) {
-                  sum += Math.random() * (high - low) + low;
-                }
-                return sum / num;
-              },
-              die_roll_integer: (num, low, high) => {
-                let sum = 0;
-                for (let i = 0; i < num; i++) {
-                  sum += Math.floor(Math.random() * (high - low + 1)) + low;
-                }
-                return Math.floor(sum / num);
-              },
-              hermite_blend: (value) => value * value * (3 - 2 * value),
-              lerp: (start, end, t) => start + (end - start) * t,
-              lerprotate: (start, end, t) => {
-                let diff = end - start;
-                if (diff > Math.PI) diff -= 2 * Math.PI;
-                if (diff < -Math.PI) diff += 2 * Math.PI;
-                return start + diff * t;
-              },
-              ln: Math.log,
+          // Create a minimal p5 instance just for noise functions
+          const p5Instance = new p5(function (p) {
+            p.setup = function () {
+              // Minimal setup - we just need the noise functions
+              p.noiseSeed(12345);
+              p.noCanvas();
             };
-            Object.freeze(math);
+          });
 
-            const query = {
-              noise: (x, y) => {
-                return p5Instance.noise(x, y) * 2 - 1;
-              }, // convert from 0-1 to -1 to 1
-            };
-            Object.freeze(query);
+          // Override potentially blocking APIs to prevent freezing
+          const originalAlert = window.alert;
+          const originalConsole = window.console;
+          window.alert = () => {}; // Disable alerts
+          window.console = {
+            log: () => {},
+            error: () => {},
+            warn: () => {},
+            info: () => {}
+          };
 
-            const userFunction = new Function(
-              "x",
-              "y",
-              "math",
-              "query",
-              `
+          // Create shared math and query objects outside the function to avoid recreating them per pixel
+          const math = {
+            abs: Math.abs,
+            sin: Math.sin,
+            cos: Math.cos,
+            clamp: (value, min, max) => Math.max(min, Math.min(max, value)),
+            ceil: Math.ceil,
+            floor: Math.floor,
+            trunc: Math.trunc,
+            round: Math.round,
+            mod: (value, denominator) => value % denominator,
+            pow: Math.pow,
+            sqrt: Math.sqrt,
+            exp: Math.exp,
+            pi: Math.PI,
+            max: Math.max,
+            min: Math.min,
+            min_angle: (value) => {
+              let angle = value % (2 * Math.PI);
+              if (angle > Math.PI) angle -= 2 * Math.PI;
+              if (angle < -Math.PI) angle += 2 * Math.PI;
+              return angle;
+            },
+            asin: Math.asin,
+            acos: Math.acos,
+            atan: Math.atan,
+            atan2: Math.atan2,
+            random: (low, high) => Math.random() * (high - low) + low,
+            random_integer: (low, high) => Math.floor(Math.random() * (high - low + 1)) + low,
+            die_roll: (num, low, high) => {
+              let sum = 0;
+              for (let i = 0; i < num; i++) {
+                sum += Math.random() * (high - low) + low;
+              }
+              return sum / num;
+            },
+            die_roll_integer: (num, low, high) => {
+              let sum = 0;
+              for (let i = 0; i < num; i++) {
+                sum += Math.floor(Math.random() * (high - low + 1)) + low;
+              }
+              return Math.floor(sum / num);
+            },
+            hermite_blend: (value) => value * value * (3 - 2 * value),
+            lerp: (start, end, t) => start + (end - start) * t,
+            lerprotate: (start, end, t) => {
+              let diff = end - start;
+              if (diff > Math.PI) diff -= 2 * Math.PI;
+              if (diff < -Math.PI) diff += 2 * Math.PI;
+              return start + diff * t;
+            },
+            ln: Math.log,
+          };
+          Object.freeze(math);
+
+          const query = {
+            noise: (x, y) => {
+              return p5Instance.noise(x, y) * 2 - 1;
+            }, // convert from 0-1 to -1 to 1
+          };
+          Object.freeze(query);
+
+          const userFunction = new Function(
+            "x",
+            "y",
+            "math",
+            "query",
+            `
             const variable = {
               originx: x,
               originz: y,
@@ -121,38 +139,38 @@
             
             return 0;
         `
-            );
+          );
 
-            // Loop through every pixel based on worldSize
-            const pixelArray = [];
+          // Loop through every pixel based on worldSize
+          const pixelArray = [];
 
-            for (let y = 0; y < worldSize; y++) {
-              for (let x = 0; x < worldSize; x++) {
-                // Call the user function with x and y coordinates
-                const colorResult = userFunction(x, y, math, query);
+          for (let y = 0; y < worldSize; y++) {
+            for (let x = 0; x < worldSize; x++) {
+              // Call the user function with x and y coordinates
+              const colorResult = userFunction(x, y, math, query);
 
-                // If the result is an RGB object, add it to the array
-                if (colorResult && typeof colorResult === "object") {
-                  pixelArray.push({ r: colorResult.r ?? 0, g: colorResult.g ?? 0, b: colorResult.b ?? 0 });
-                } else if (typeof colorResult === "number") {
-                  const clampedColorResult = math.clamp(colorResult, 0, 1);
-                  // Treat as grayscale value
-                  pixelArray.push({ r: clampedColorResult, g: clampedColorResult, b: clampedColorResult });
-                }
+              // If the result is an RGB object, add it to the array
+              if (colorResult && typeof colorResult === "object") {
+                pixelArray.push({ r: colorResult.r ?? 0, g: colorResult.g ?? 0, b: colorResult.b ?? 0 });
+              } else if (typeof colorResult === "number") {
+                const clampedColorResult = math.clamp(colorResult, 0, 1);
+                // Treat as grayscale value
+                pixelArray.push({ r: clampedColorResult, g: clampedColorResult, b: clampedColorResult });
               }
             }
-
-            result = {
-              text: "Success!",
-              pixelArray: normalizePixels(pixelArray),
-            };
-          } else {
-            throw new Error("Invalid message format");
           }
+
+          result = { text: "", pixelArray: normalizePixels(pixelArray) };
+
+          // Restore original APIs
+          window.alert = originalAlert;
+          window.console = originalConsole;
 
           window.parent.postMessage(result, "*");
         } catch (error) {
-          console.error("Error processing message:", error);
+          // Restore original APIs even in case of error
+          window.alert = originalAlert;
+          window.console = originalConsole;
           window.parent.postMessage({ text: `Error: ${error.message}`, pixelArray: [] }, "*");
         }
       });
