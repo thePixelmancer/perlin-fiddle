@@ -33,3 +33,54 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   });
 });
+// Set up world size input validation and warning
+document.getElementById("worldSizeInput")?.addEventListener("input", (event) => {
+  const input = event.target;
+  const value = parseInt(input.value);
+
+  if (value > 2048) {
+    input.classList.remove("border-gray-700");
+    input.classList.remove("focus:border-cyan-700");
+    input.classList.add("border-yellow-700");
+    input.classList.add("focus:border-yellow-700");
+  } else {
+    input.classList.remove("border-yellow-700");
+    input.classList.remove("focus:border-yellow-700");
+    input.classList.add("border-gray-700");
+    input.classList.add("focus:border-cyan-700");
+  }
+});
+
+// Set up the copy molang button
+document.getElementById("copy-molang-button")?.addEventListener("click", () => {
+  if (window.editor) {
+    const codeText = window.editor.getValue();
+
+    // Use the modern Clipboard API
+    navigator.clipboard
+      .writeText(codeText)
+      .then(() => {
+        // Show feedback to user
+        const button = document.getElementById("copy-molang-button");
+        const originalText = button.querySelector("span").textContent;
+        button.querySelector("span").textContent = "Copied!";
+
+        // Reset button text after 2 seconds
+        setTimeout(() => {
+          button.querySelector("span").textContent = originalText;
+        }, 2000);
+      })
+      .catch((err) => {
+        console.error("Failed to copy text: ", err);
+        // Show error feedback to user
+        const button = document.getElementById("copy-molang-button");
+        const originalText = button.querySelector("span").textContent;
+        button.querySelector("span").textContent = "Copy Failed";
+
+        // Reset button text after 2 seconds
+        setTimeout(() => {
+          button.querySelector("span").textContent = originalText;
+        }, 2000);
+      });
+  }
+});

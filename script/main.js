@@ -90,6 +90,44 @@ function imageFromArray(sketch, pixelArray) {
   return img;
 }
 
+// Draw grid overlay that moves and zooms with content
+function drawGrid(sketch, imageSize) {
+  const gridSize = parseInt(document.getElementById("gridSizeInput").value) || imageSize;
+  const gridColor = document.getElementById("gridColorInput").value;
+
+  // Convert hex color to RGB
+  const r = parseInt(gridColor.substr(1, 2), 16);
+  const g = parseInt(gridColor.substr(3, 2), 16);
+  const b = parseInt(gridColor.substr(5, 2), 16);
+
+  sketch.push();
+
+  // Apply the same transformations as the image
+  sketch.translate(CAMERA.x, CAMERA.y);
+  sketch.scale(CAMERA.zoom);
+  sketch.blendMode(sketch.DIFFERENCE);
+  // Set grid styling with constant stroke weight (not affected by zoom)
+  sketch.stroke(r, g, b, 200); // Semi-transparent
+  sketch.strokeWeight(1 / CAMERA.zoom); // Counteract the scale to keep stroke constant
+
+  // Calculate grid bounds
+  const gridCount = Math.floor(imageSize / gridSize);
+
+  // Draw vertical lines. start from 1 no need to draw the line at the edge
+  for (let i = 1; i <= gridCount; i++) {
+    const x = i * gridSize;
+    sketch.line(x, 0, x, imageSize);
+  }
+
+  // Draw horizontal lines
+  for (let i = 1; i <= gridCount; i++) {
+    const y = i * gridSize;
+    sketch.line(0, y, imageSize, y);
+  }
+
+  sketch.pop();
+}
+
 // Initialize p5
 new p5((sketch) => {
   sketch.setup = () => {
@@ -116,6 +154,9 @@ new p5((sketch) => {
         sketch.scale(CAMERA.zoom);
         sketch.image(imageData, 0, 0);
         sketch.pop();
+
+        // Draw grid overlay
+        drawGrid(sketch, imageData.width);
       }
     }
 
@@ -197,6 +238,7 @@ document.getElementById("run-button")?.addEventListener("click", () => {
     sendToSandbox({ userInput: codeEditorText, worldSize: worldSize });
   }
 });
+
 // Process code through sandbox
 function sendToSandbox(object) {
   if (SANDBOX?.contentWindow) {
