@@ -7,10 +7,11 @@
     'Noto Color Emoji';
     --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New',
     monospace;
-    --color-red-700: oklch(50.5% 0.213 27.518);
     --color-amber-50: oklch(98.7% 0.022 95.277);
     --color-amber-300: oklch(87.9% 0.169 91.605);
     --color-yellow-700: oklch(55.4% 0.135 66.442);
+    --color-emerald-300: oklch(84.5% 0.143 164.978);
+    --color-emerald-400: oklch(76.5% 0.177 163.223);
     --color-cyan-300: oklch(86.5% 0.127 207.078);
     --color-cyan-400: oklch(78.9% 0.154 211.53);
     --color-cyan-600: oklch(60.9% 0.126 221.723);
@@ -23,6 +24,7 @@
     --color-gray-700: oklch(37.3% 0.034 259.733);
     --color-gray-800: oklch(27.8% 0.033 256.848);
     --color-gray-900: oklch(21% 0.034 264.665);
+    --color-stone-900: oklch(21.6% 0.006 56.043);
     --color-white: #fff;
     --spacing: 0.25rem;
     --container-3xl: 48rem;
@@ -276,6 +278,14 @@
   .table {
     display: table;
   }
+  .size-4 {
+    width: calc(var(--spacing) * 4);
+    height: calc(var(--spacing) * 4);
+  }
+  .size-5 {
+    width: calc(var(--spacing) * 5);
+    height: calc(var(--spacing) * 5);
+  }
   .size-6 {
     width: calc(var(--spacing) * 6);
     height: calc(var(--spacing) * 6);
@@ -346,6 +356,9 @@
   .items-center {
     align-items: center;
   }
+  .justify-center {
+    justify-content: center;
+  }
   .gap-2 {
     gap: calc(var(--spacing) * 2);
   }
@@ -368,6 +381,10 @@
   .rounded-md {
     border-radius: var(--radius-md);
   }
+  .rounded-t-md {
+    border-top-left-radius: var(--radius-md);
+    border-top-right-radius: var(--radius-md);
+  }
   .border {
     border-style: var(--tw-border-style);
     border-width: 1px;
@@ -385,9 +402,6 @@
   }
   .border-gray-700 {
     border-color: var(--color-gray-700);
-  }
-  .border-red-700 {
-    border-color: var(--color-red-700);
   }
   .border-transparent {
     border-color: transparent;
@@ -409,6 +423,9 @@
   }
   .bg-gray-900 {
     background-color: var(--color-gray-900);
+  }
+  .bg-stone-900 {
+    background-color: var(--color-stone-900);
   }
   .bg-white {
     background-color: var(--color-white);
@@ -491,6 +508,9 @@
   .text-cyan-400 {
     color: var(--color-cyan-400);
   }
+  .text-emerald-400 {
+    color: var(--color-emerald-400);
+  }
   .text-gray-200 {
     color: var(--color-gray-200);
   }
@@ -499,6 +519,9 @@
   }
   .text-gray-400 {
     color: var(--color-gray-400);
+  }
+  .text-white {
+    color: var(--color-white);
   }
   .lowercase {
     text-transform: lowercase;
@@ -594,6 +617,13 @@
       }
     }
   }
+  .hover\:text-emerald-300 {
+    &:hover {
+      @media (hover: hover) {
+        color: var(--color-emerald-300);
+      }
+    }
+  }
   .hover\:text-gray-300 {
     &:hover {
       @media (hover: hover) {
@@ -619,11 +649,6 @@
   .focus\:border-cyan-700 {
     &:focus {
       border-color: var(--color-cyan-700);
-    }
-  }
-  .focus\:border-red-700 {
-    &:focus {
-      border-color: var(--color-red-700);
     }
   }
   .focus\:border-yellow-700 {
