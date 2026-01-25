@@ -95,7 +95,8 @@ function imageFromArray(sketch, pixelArray) {
 
 // Draw grid overlay that moves and zooms with content
 function drawGrid(sketch, imageSize) {
-  const gridSize = parseInt(document.getElementById("gridSizeInput").value) || imageSize;
+  const gridSize =
+    parseInt(document.getElementById("gridSizeInput").value) || imageSize;
   const gridColor = document.getElementById("gridColorInput").value;
 
   // Convert hex color to RGB
@@ -135,7 +136,9 @@ function drawGrid(sketch, imageSize) {
 new p5((sketch) => {
   sketch.setup = () => {
     const canvasDiv = document.querySelector("#canvas > div");
-    sketch.createCanvas(canvasDiv.offsetWidth, canvasDiv.offsetHeight).parent(canvasDiv);
+    sketch
+      .createCanvas(canvasDiv.offsetWidth, canvasDiv.offsetHeight)
+      .parent(canvasDiv);
     sketch.noSmooth();
   };
 
@@ -146,9 +149,12 @@ new p5((sketch) => {
     if (SKETCH_CONTENT.pixelArray && SKETCH_CONTENT.pixelArray.length > 0) {
       // Create cached image if it doesn't exist
       if (!SKETCH_CONTENT.cachedImage) {
-        SKETCH_CONTENT.cachedImage = imageFromArray(sketch, SKETCH_CONTENT.pixelArray);
+        SKETCH_CONTENT.cachedImage = imageFromArray(
+          sketch,
+          SKETCH_CONTENT.pixelArray,
+        );
       }
-      
+
       const imageData = SKETCH_CONTENT.cachedImage;
       if (imageData) {
         // Center and fit if this is new content
@@ -185,7 +191,11 @@ new p5((sketch) => {
 
   // Mouse wheel for zoom
   sketch.mouseWheel = (event) => {
-    const isOverCanvas = sketch.mouseX >= 0 && sketch.mouseX <= sketch.width && sketch.mouseY >= 0 && sketch.mouseY <= sketch.height;
+    const isOverCanvas =
+      sketch.mouseX >= 0 &&
+      sketch.mouseX <= sketch.width &&
+      sketch.mouseY >= 0 &&
+      sketch.mouseY <= sketch.height;
 
     if (isOverCanvas) {
       const zoomSpeed = 0.4;
@@ -205,7 +215,11 @@ new p5((sketch) => {
 
   // Mouse events for panning
   sketch.mousePressed = () => {
-    const isOverCanvas = sketch.mouseX >= 0 && sketch.mouseX <= sketch.width && sketch.mouseY >= 0 && sketch.mouseY <= sketch.height;
+    const isOverCanvas =
+      sketch.mouseX >= 0 &&
+      sketch.mouseX <= sketch.width &&
+      sketch.mouseY >= 0 &&
+      sketch.mouseY <= sketch.height;
 
     if (isOverCanvas) {
       MOUSE_STATE.isDragging = true;
@@ -239,7 +253,8 @@ new p5((sketch) => {
 /* -------------------------------------------------------------------------- */
 // Set up the run button
 document.getElementById("run-button")?.addEventListener("click", () => {
-  const worldSize = parseInt(document.getElementById("worldSizeInput").value) || 512;
+  const worldSize =
+    parseInt(document.getElementById("worldSizeInput").value) || 512;
   const codeEditorText = window.editor.getValue();
 
   if (window.editor) {
@@ -247,6 +262,16 @@ document.getElementById("run-button")?.addEventListener("click", () => {
   }
 });
 
+// Add Shift+Enter keyboard shortcut to run the code
+document.addEventListener("keydown", (event) => {
+  if (event.shiftKey && event.key === "Enter") {
+    const runButton = document.getElementById("run-button");
+    if (runButton) {
+      runButton.click();
+      event.preventDefault();
+    }
+  }
+});
 // Process code through sandbox
 function sendToSandbox(object) {
   if (SANDBOX?.contentWindow) {
