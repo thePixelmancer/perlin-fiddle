@@ -1,7 +1,14 @@
 <!DOCTYPE html>
 <html>
   <body>
-    <script src="./script/p5.js"></script>
-    <script src="./script/sandbox.js"></script>
+    <!-- Load p5.js as a module with same import map -->
+    <script type="importmap">
+      {
+        "imports": {
+          "p5": "https://cdn.skypack.dev/p5@1.7.0"
+        }
+      }
+    </script>
+    <script type="module" src="./script/sandbox.js"></script>
   </body>
 </html>

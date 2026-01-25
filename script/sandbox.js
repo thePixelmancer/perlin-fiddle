@@ -1,3 +1,5 @@
+import p5 from "p5";
+
 // Pixel processing utilities
 function normalizePixels(pixelArray) {
   const result = new Uint8ClampedArray(pixelArray.length * 4);
