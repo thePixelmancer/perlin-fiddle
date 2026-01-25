@@ -4,6 +4,7 @@ import p5 from "p5";
 const SKETCH_CONTENT = {
   text: "Type code and click Run!",
   pixelArray: [],
+  cachedImage: null,
 };
 
 // Camera state for pan and zoom
@@ -53,12 +54,14 @@ window.addEventListener("message", (event) => {
     switch (event.data.type) {
       case "pixelArray":
         SKETCH_CONTENT.pixelArray = event.data.message;
+        SKETCH_CONTENT.cachedImage = null; // Clear cached image when new data arrives
         SKETCH_CONTENT.text = ""; // Clear any previous error text
         CAMERA.needsCentering = true; // Flag to center new content
         break;
       case "error":
         SKETCH_CONTENT.text = event.data.message;
         SKETCH_CONTENT.pixelArray = []; // Clear pixel array on error
+        SKETCH_CONTENT.cachedImage = null; // Clear cached image on error
         break;
     }
   }
@@ -141,7 +144,12 @@ new p5((sketch) => {
 
     // Draw image if pixelArray exists and has data
     if (SKETCH_CONTENT.pixelArray && SKETCH_CONTENT.pixelArray.length > 0) {
-      const imageData = imageFromArray(sketch, SKETCH_CONTENT.pixelArray);
+      // Create cached image if it doesn't exist
+      if (!SKETCH_CONTENT.cachedImage) {
+        SKETCH_CONTENT.cachedImage = imageFromArray(sketch, SKETCH_CONTENT.pixelArray);
+      }
+      
+      const imageData = SKETCH_CONTENT.cachedImage;
       if (imageData) {
         // Center and fit if this is new content
         if (CAMERA.needsCentering) {
