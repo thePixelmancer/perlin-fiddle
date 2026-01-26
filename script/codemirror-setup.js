@@ -61,6 +61,24 @@ return {
   b: v.noise_value * 0.8 + 0.2   // Blue channel
 };`;
 
+// localStorage functions for code persistence
+function getSavedCode() {
+  try {
+    return localStorage.getItem('perlin-fiddle-code');
+  } catch (e) {
+    console.warn('Failed to load saved code:', e);
+    return null;
+  }
+}
+
+function saveCode(code) {
+  try {
+    localStorage.setItem('perlin-fiddle-code', code);
+  } catch (e) {
+    console.warn('Failed to save code:', e);
+  }
+}
+
 // Initialize CodeMirror with Tailwind color scheme
 const editor = CodeMirror(document.getElementById("code-input"), {
   mode: "javascript",
@@ -72,7 +90,7 @@ const editor = CodeMirror(document.getElementById("code-input"), {
   indentUnit: 2,
   tabSize: 2,
   styleActiveLine: true,
-  value: defaultCode, // Set default starting code
+  value: getSavedCode() || defaultCode, // Load saved code or default
   extraKeys: {
     "Ctrl-Space": function (cm) {
       cm.showHint({
@@ -93,6 +111,12 @@ function resizeEditor() {
 }
 window.addEventListener("resize", resizeEditor);
 resizeEditor();
+
+// Auto-save code when editor content changes
+editor.on('change', (instance, change) => {
+  const currentCode = instance.getValue();
+  saveCode(currentCode);
+});
 
 // Expose editor to global scope for other scripts
 window.editor = editor;
