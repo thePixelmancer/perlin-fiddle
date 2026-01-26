@@ -79,6 +79,60 @@ function saveCode(code) {
   }
 }
 
+// Share functionality
+function generateShareLink(code) {
+  // Compress the code using base64 encoding
+  const encodedCode = btoa(encodeURIComponent(code));
+  const baseUrl = window.location.origin + window.location.pathname;
+  return `${baseUrl}?code=${encodedCode}`;
+}
+
+function copyShareLink() {
+  const currentCode = editor.getValue();
+  const shareLink = generateShareLink(currentCode);
+  
+  // Copy to clipboard
+  navigator.clipboard.writeText(shareLink).then(() => {
+    // Show feedback (you could add a toast notification here)
+    console.log('Share link copied to clipboard!');
+    
+    // Optional: Visual feedback on the button
+    const shareButton = document.getElementById('share-button');
+    const originalText = shareButton.querySelector('span').textContent;
+    shareButton.querySelector('span').textContent = 'Copied!';
+    shareButton.classList.add('bg-green-600');
+    
+    setTimeout(() => {
+      shareButton.querySelector('span').textContent = originalText;
+      shareButton.classList.remove('bg-green-600');
+    }, 2000);
+  }).catch(err => {
+    console.error('Failed to copy share link:', err);
+    // Fallback for older browsers
+    const textArea = document.createElement('textarea');
+    textArea.value = shareLink;
+    document.body.appendChild(textArea);
+    textArea.select();
+    document.execCommand('copy');
+    document.body.removeChild(textArea);
+  });
+}
+
+function loadCodeFromURL() {
+  const urlParams = new URLSearchParams(window.location.search);
+  const encodedCode = urlParams.get('code');
+  
+  if (encodedCode) {
+    try {
+      const decodedCode = decodeURIComponent(atob(encodedCode));
+      return decodedCode;
+    } catch (e) {
+      console.error('Failed to decode code from URL:', e);
+    }
+  }
+  return null;
+}
+
 // Initialize CodeMirror with Tailwind color scheme
 const editor = CodeMirror(document.getElementById("code-input"), {
   mode: "javascript",
@@ -90,7 +144,18 @@ const editor = CodeMirror(document.getElementById("code-input"), {
   indentUnit: 2,
   tabSize: 2,
   styleActiveLine: true,
-  value: getSavedCode() || defaultCode, // Load saved code or default
+  value: (() => {
+    // Priority: 1. URL shared code, 2. localStorage saved code, 3. default code
+    const sharedCode = loadCodeFromURL();
+    if (sharedCode) {
+      console.log('Code loaded from share link');
+      // Clean up the URL to remove the code parameter
+      const cleanUrl = window.location.origin + window.location.pathname;
+      window.history.replaceState({}, document.title, cleanUrl);
+      return sharedCode;
+    }
+    return getSavedCode() || defaultCode;
+  })(),
   extraKeys: {
     "Ctrl-Space": function (cm) {
       cm.showHint({
@@ -117,6 +182,9 @@ editor.on('change', (instance, change) => {
   const currentCode = instance.getValue();
   saveCode(currentCode);
 });
+
+// Set up share button event listener
+document.getElementById('share-button')?.addEventListener('click', copyShareLink);
 
 // Expose editor to global scope for other scripts
 window.editor = editor;
