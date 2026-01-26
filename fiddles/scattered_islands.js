@@ -28,4 +28,4 @@ v.clamped_distance = math.clamp(v.distance_from_center, 0, v.radius);
 
 v.normalized_distance = 1 - v.clamped_distance / v.radius;
 
-return v.should_spawn_here ? v.perlin_1 * v.normalized_distance > 0.5 : 0;
+return v.should_spawn_here ? v.perlin_1 * v.normalized_distance > 0.5 ? 1 : 0 : 0;
