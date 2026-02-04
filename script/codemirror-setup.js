@@ -52,14 +52,20 @@ CodeMirror.registerHelper("hint", "javascriptCustom", function (editor, options)
 const defaultCode = `// Generate a simple noise pattern
 // Try modifying this code to create different patterns!
 
-v.noise_value = q.noise(v.originx * 0.01, v.originz * 0.01);
+v.noise = q.noise(v.originx * 0.01, v.originz * 0.01);
 
 // Return RGB color object
-return {
-  r: v.noise_value * 0.5 + 0.5,  // Red channel
-  g: v.noise_value * 0.3 + 0.4,  // Green channel  
-  b: v.noise_value * 0.8 + 0.2   // Blue channel
-};`;
+return v.noise > 0
+  ? { 
+      r: 0.55 + 0.45 * v.noise, 
+      g: 0.55 + 0.45 * v.noise, 
+      b: 0.55 + 0.45 * v.noise 
+    }
+  : { 
+      r: 0.2, 
+      g: 0.4 + 0.6 * -v.noise, 
+      b: 1.0 + 0.0 * -v.noise 
+    };`;
 
 // localStorage functions for code persistence
 function getSavedCode() {

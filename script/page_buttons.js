@@ -114,10 +114,12 @@ document.getElementById("copy-molang-button")?.addEventListener("click", () => {
         const button = document.getElementById("copy-molang-button");
         const originalText = button.querySelector("span").textContent;
         button.querySelector("span").textContent = "Copied!";
+        button.classList.add('bg-green-600');
 
-        // Reset button text after 2 seconds
+        // Reset button text and color after 2 seconds
         setTimeout(() => {
           button.querySelector("span").textContent = originalText;
+          button.classList.remove('bg-green-600');
         }, 2000);
       })
       .catch((err) => {

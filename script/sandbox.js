@@ -148,10 +148,12 @@ window.addEventListener("message", (event) => {
     // Initialize p5 instance
     const p5Instance = new p5(function (p) {
       p.setup = function () {
-        p.noiseSeed(12345);
         p.noCanvas();
       };
     });
+
+    // Set noise seed immediately after p5 instance creation
+    p5Instance.noiseSeed(12345);
 
     // Create libraries
     const math = Object.freeze(createMathLibrary());
