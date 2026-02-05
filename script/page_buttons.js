@@ -8,7 +8,7 @@ document.addEventListener("DOMContentLoaded", () => {
   codeInput.classList.remove("hidden");
   documentation.classList.add("hidden");
 
-  tabsContainer.addEventListener("click", (e) => {
+  tabsContainer.addEventListener("click", async (e) => {
     const clickedTab = e.target.closest(".tab-button");
     if (!clickedTab) return;
 
@@ -30,6 +30,24 @@ document.addEventListener("DOMContentLoaded", () => {
     } else if (clickedTab.textContent.trim() === "Documentation") {
       codeInput.classList.add("hidden");
       documentation.classList.remove("hidden");
+
+      // Fetch documentation HTML if not already loaded
+      if (documentation.innerHTML.trim() === "") {
+        try {
+          const response = await fetch("./documentation.html");
+          if (response.ok) {
+            const html = await response.text();
+            // Extract the body content (everything inside the body tags)
+            const parser = new DOMParser();
+            const doc = parser.parseFromString(html, "text/html");
+            const bodyContent = doc.body.innerHTML;
+            documentation.innerHTML = bodyContent;
+          }
+        } catch (error) {
+          console.error("Error loading documentation:", error);
+          documentation.innerHTML = "<p class='p-6 text-red-400'>Error loading documentation.</p>";
+        }
+      }
     }
   });
 

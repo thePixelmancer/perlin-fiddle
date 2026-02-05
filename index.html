@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
@@ -16,9 +16,9 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/addon/hint/show-hint.min.css" />
   </head>
   <body>
-    <div id="main" class="h-screen flex flex-row bg-gray-900 text-gray-200 gap-3 p-3">
+    <div id="main" class="flex flex-col md:flex-row md:h-screen bg-gray-900 text-gray-200 gap-3 p-3">
       <div id="left-panel" class="flex flex-col gap-3 flex-1">
-        <div id="canvas" class="relative w-full h-full min-h-[200px] rounded-md bg-gray-700">
+        <div id="canvas" class="relative w-full h-full min-h-[400px] rounded-md bg-gray-700">
           <div class="absolute inset-0 w-full h-full">
             <!-- p5 canvas will be inserted here -->
           </div>
@@ -105,59 +105,7 @@
         <div id="code-input" class="flex-1 overflow-auto"></div>
         <div
           id="documentation"
-          class="[&::-webkit-scrollbar]:w-2 [&::-webkit-scrollbar-track]:bg-gray-900 [&::-webkit-scrollbar-thumb]:bg-gray-600 [&::-webkit-scrollbar-thumb]:rounded-full hidden flex-1 overflow-auto bg-gray-800 p-6 text-gray-200">
-          <div class="max-w-3xl mx-auto">
-            <h1 class="text-2xl font-bold text-cyan-400 mb-6">Molang Documentation</h1>
-
-            <section class="mb-8">
-              <h2 class="text-xl font-semibold text-cyan-300 mb-3">Introduction</h2>
-              <p class="mb-4">
-                Welcome to the Molang Editor. This tool allows you to create and test Molang expressions for use in Minecraft's animation and
-                rendering systems.
-              </p>
-            </section>
-
-            <section class="mb-8">
-              <h2 class="text-xl font-semibold text-cyan-300 mb-3">Basic Usage</h2>
-              <ul class="list-disc pl-5 space-y-2 mb-4">
-                <li>Write your Molang expressions in the editor</li>
-                <li>Click the <span class="text-cyan-400">Run</span> button to execute your code</li>
-                <li>Use the <span class="text-cyan-400">Copy Molang</span> button to copy your code</li>
-                <li>Load examples from the dropdown menu</li>
-              </ul>
-            </section>
-
-            <section class="mb-8">
-              <h2 class="text-xl font-semibold text-cyan-300 mb-3">Common Functions</h2>
-              <div class="bg-gray-700 rounded p-4 mb-4">
-                <code class="block text-amber-300 mb-1">query.variable('var_name')</code>
-                <p class="text-sm text-gray-300">Access a variable value</p>
-              </div>
-              <div class="bg-gray-700 rounded p-4 mb-4">
-                <code class="block text-amber-300 mb-1">math.sin(time * 0.1)</code>
-                <p class="text-sm text-gray-300">Use mathematical functions</p>
-              </div>
-              <div class="bg-gray-700 rounded p-4">
-                <code class="block text-amber-300 mb-1">variable.my_var = 1.0;</code>
-                <p class="text-sm text-gray-300">Set variable values</p>
-              </div>
-            </section>
-
-            <section>
-              <h2 class="text-xl font-semibold text-cyan-300 mb-3">Tips</h2>
-              <ul class="list-disc pl-5 space-y-2">
-                <li>Use the console for debugging output</li>
-                <li>Variables must be declared before use</li>
-                <li>Check the browser console for error messages</li>
-                <li>
-                  Press
-                  <span class="bg-gray-600 px-1.5 py-0.5 rounded text-sm">Ctrl+Space</span>
-                  for code completion
-                </li>
-              </ul>
-            </section>
-          </div>
-        </div>
+          class="[&::-webkit-scrollbar]:w-2 [&::-webkit-scrollbar-track]:bg-gray-900 [&::-webkit-scrollbar-thumb]:bg-gray-600 [&::-webkit-scrollbar-thumb]:rounded-full hidden flex-1 overflow-auto bg-gray-800"></div>
         <div id="button-group" class="flex gap-3 p-3">
           <button
             id="run-button"
@@ -185,7 +133,7 @@
             <span>Copy code</span>
             <span class="bg-white opacity-0 group-active:opacity-10 rounded-md transition-opacity duration-150"></span>
           </button>
-           <button
+          <button
             id="share-button"
             class="bg-gray-900 outline-1 outline-gray-700 hover:outline-gray-500 active:scale-95 rounded-md p-2 transition-all duration-150 ease-out hover:shadow-lg active:shadow-inner flex items-center gap-2">
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
