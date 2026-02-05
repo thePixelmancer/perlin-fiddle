@@ -3,87 +3,180 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Molang Documentation</title>
+    <title>Perlin Fiddle Documentation</title>
     <link rel="stylesheet" href="./dist/styles.css" />
   </head>
   <body class="bg-gray-800 text-gray-200">
     <div
       class="[&::-webkit-scrollbar]:w-2 [&::-webkit-scrollbar-track]:bg-gray-900 [&::-webkit-scrollbar-thumb]:bg-gray-600 [&::-webkit-scrollbar-thumb]:rounded-full max-h-full overflow-auto p-6">
-      <h1 class="text-2xl font-bold text-cyan-400 mb-6">Molang Documentation</h1>
+      <h1 class="text-2xl font-bold text-cyan-400 mb-6">Perlin Fiddle Documentation</h1>
 
       <section class="mb-8">
-        <h2 class="text-xl font-semibold text-cyan-300 mb-3">Introduction</h2>
+        <h2 class="text-xl font-semibold text-cyan-300 mb-3">Welcome to Perlin Fiddle</h2>
         <p class="mb-4">
-          Welcome to the Molang Editor. This tool allows you to create and test Molang expressions for use in Minecraft's animation and rendering
-          systems.
+          A real-time visual editor for procedural generation. Write code to generate pixel-based visualizations using Perlin noise, mathematics, and
+          custom algorithms. You can write either standard JavaScript or Molang-style expressions to create terrain, patterns, and more.
         </p>
       </section>
 
       <section class="mb-8">
-        <h2 class="text-xl font-semibold text-cyan-300 mb-3">Basic Usage</h2>
+        <h2 class="text-xl font-semibold text-cyan-300 mb-3">Getting Started</h2>
+        <ol class="list-decimal pl-5 space-y-2 mb-4">
+          <li>Write your code in the editor on the left</li>
+          <li>
+            Click <span class="text-cyan-400 font-semibold">Run</span> or press
+            <span class="bg-gray-600 px-1.5 py-0.5 rounded text-sm">Shift+Enter</span>
+            to execute
+          </li>
+          <li>Your output will render as a square image on the canvas</li>
+          <li>Adjust <span class="text-cyan-400">World Size</span> to change resolution (and generation speed)</li>
+          <li>Use <span class="text-cyan-400">Grid Size</span> and <span class="text-cyan-400">Grid Color</span> for visualization overlays</li>
+        </ol>
+      </section>
+
+      <section class="mb-8">
+        <h2 class="text-xl font-semibold text-cyan-300 mb-3">Your Code: Per-Pixel Function</h2>
+        <p class="mb-4">
+          Your code runs once for every pixel in the output. The system calls your function with coordinates for each pixel, and you return a color.
+        </p>
+        <div class="bg-gray-700 rounded p-4 mb-4">
+          <p class="text-sm text-gray-300 mb-2"><strong>Parameters available:</strong></p>
+          <ul class="text-sm text-gray-300 space-y-1">
+            <li><code class="text-amber-300">x, y</code> - Current pixel coordinates (0 to worldSize)</li>
+            <li><code class="text-amber-300">v.originx, v.originz</code> - Alias for x and y coordinates</li>
+            <li><code class="text-amber-300">v.worldx, v.worldz</code> - Another alias for coordinates</li>
+          </ul>
+        </div>
+      </section>
+
+      <section class="mb-8">
+        <h2 class="text-xl font-semibold text-cyan-300 mb-3">Returning Colors</h2>
+        <p class="mb-4">Your function must return a color value. Two formats are supported:</p>
+        <div class="bg-gray-700 rounded p-4 mb-4">
+          <p class="text-sm text-gray-300 mb-2"><strong>RGB Object (recommended):</strong></p>
+          <code class="block text-amber-300 mb-2">return { r: 0.5, g: 0.3, b: 0.8 };</code>
+          <p class="text-xs text-gray-400">Values should be between 0.0 and 1.0</p>
+        </div>
+        <div class="bg-gray-700 rounded p-4">
+          <p class="text-sm text-gray-300 mb-2"><strong>Grayscale Number:</strong></p>
+          <code class="block text-amber-300 mb-2">return 0.5; // grayscale value 0.0 (black) to 1.0 (white)</code>
+          <p class="text-xs text-gray-400">Automatically converts to grayscale RGB</p>
+        </div>
+      </section>
+
+      <section class="mb-8">
+        <h2 class="text-xl font-semibold text-cyan-300 mb-3">Variables & Objects</h2>
+        <p class="mb-4">
+          Create variables with <code class="text-amber-300">v.name</code> to store and reuse values. The <code class="text-amber-300">v</code> object
+          persists throughout your code.
+        </p>
+        <div class="bg-gray-700 rounded p-4 mb-4">
+          <code class="block text-amber-300 mb-2">v.scale = 0.01;</code>
+          <code class="block text-amber-300 mb-2">v.noise = q.noise(v.originx * v.scale, v.originz * v.scale);</code>
+          <p class="text-sm text-gray-300 mt-2">
+            Use <code class="text-amber-300">const</code> and <code class="text-amber-300">let</code> for local variables too
+          </p>
+        </div>
+      </section>
+
+      <section class="mb-8">
+        <h2 class="text-xl font-semibold text-cyan-300 mb-3">Noise Generation</h2>
+        <p class="mb-4">Use the <code class="text-amber-300">q.noise(x, y)</code> function to generate Perlin noise:</p>
+        <div class="bg-gray-700 rounded p-4 mb-4">
+          <code class="block text-amber-300 mb-2">v.noise = q.noise(v.originx * 0.01, v.originz * 0.01);</code>
+          <ul class="text-sm text-gray-300 space-y-1 mt-2">
+            <li>• Returns values between -1.0 and 1.0</li>
+            <li>• Scale the input coordinates to control frequency (smaller = smoother, larger = more detailed)</li>
+            <li>• Use multiple octaves at different scales for complex terrain (Fractional Brownian Motion)</li>
+          </ul>
+        </div>
+      </section>
+
+      <section class="mb-8">
+        <h2 class="text-xl font-semibold text-cyan-300 mb-3">Math Library</h2>
+        <p class="mb-4">Access math functions through the <code class="text-amber-300">math</code> object:</p>
+        <div class="space-y-3">
+          <div class="bg-gray-700 rounded p-4">
+            <p class="text-sm text-gray-300 mb-2">
+              <strong>Basic:</strong>
+              <code class="text-amber-300">math.abs(), math.floor(), math.ceil(), math.round(), math.sqrt(), math.pow(base, exp)</code>
+            </p>
+          </div>
+          <div class="bg-gray-700 rounded p-4">
+            <p class="text-sm text-gray-300 mb-2">
+              <strong>Trigonometry:</strong> <code class="text-amber-300">math.sin(), math.cos(), math.tan(), math.atan2(y, x)</code>
+            </p>
+          </div>
+          <div class="bg-gray-700 rounded p-4">
+            <p class="text-sm text-gray-300 mb-2"><strong>Clamping & Interpolation:</strong></p>
+            <code class="block text-amber-300 mb-1">math.clamp(value, min, max)</code>
+            <code class="block text-amber-300 mb-1">math.lerp(start, end, t) // Linear interpolation (t from 0-1)</code>
+            <code class="block text-amber-300">math.hermite_blend(value) // Smoothstep interpolation</code>
+          </div>
+          <div class="bg-gray-700 rounded p-4">
+            <p class="text-sm text-gray-300 mb-2"><strong>Random:</strong></p>
+            <code class="block text-amber-300 mb-1">math.random(low, high)</code>
+            <code class="block text-amber-300 mb-1">math.random_integer(low, high)</code>
+            <code class="block text-amber-300">math.die_roll(num, low, high) // Average of n random values</code>
+          </div>
+          <div class="bg-gray-700 rounded p-4">
+            <p class="text-sm text-gray-300 mb-2">
+              <strong>Other:</strong> <code class="text-amber-300">math.min(), math.max(), math.mod(a, b), math.pi</code>
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <section class="mb-8">
+        <h2 class="text-xl font-semibold text-cyan-300 mb-3">Canvas Controls</h2>
         <ul class="list-disc pl-5 space-y-2 mb-4">
-          <li>Write your Molang expressions in the editor</li>
-          <li>Click the <span class="text-cyan-400">Run</span> button to execute your code</li>
-          <li>Use the <span class="text-cyan-400">Copy Molang</span> button to copy your code</li>
-          <li>Load examples from the dropdown menu</li>
+          <li><strong>Pan:</strong> Click and drag the canvas to move around</li>
+          <li><strong>Zoom:</strong> Scroll wheel to zoom in/out (clamped 0.1x to 50x)</li>
+          <li><strong>Auto-fit:</strong> New generations automatically center and fit to the canvas</li>
+          <li><strong>Grid Overlay:</strong> Customize grid size and color for reference</li>
         </ul>
       </section>
 
       <section class="mb-8">
-        <h2 class="text-xl font-semibold text-cyan-300 mb-3">Common Functions</h2>
-        <div class="bg-gray-700 rounded p-4 mb-4">
-          <code class="block text-amber-300 mb-1">query.variable('var_name')</code>
-          <p class="text-sm text-gray-300">Access a variable value</p>
-        </div>
-        <div class="bg-gray-700 rounded p-4 mb-4">
-          <code class="block text-amber-300 mb-1">query.variable('var_name')</code>
-          <p class="text-sm text-gray-300">Access a variable value</p>
-        </div>
-        <div class="bg-gray-700 rounded p-4 mb-4">
-          <code class="block text-amber-300 mb-1">query.variable('var_name')</code>
-          <p class="text-sm text-gray-300">Access a variable value</p>
-        </div>
-        <div class="bg-gray-700 rounded p-4 mb-4">
-          <code class="block text-amber-300 mb-1">query.variable('var_name')</code>
-          <p class="text-sm text-gray-300">Access a variable value</p>
-        </div>
-        <div class="bg-gray-700 rounded p-4 mb-4">
-          <code class="block text-amber-300 mb-1">query.variable('var_name')</code>
-          <p class="text-sm text-gray-300">Access a variable value</p>
-        </div>
-        <div class="bg-gray-700 rounded p-4 mb-4">
-          <code class="block text-amber-300 mb-1">query.variable('var_name')</code>
-          <p class="text-sm text-gray-300">Access a variable value</p>
-        </div>
-        <div class="bg-gray-700 rounded p-4 mb-4">
-          <code class="block text-amber-300 mb-1">query.variable('var_name')</code>
-          <p class="text-sm text-gray-300">Access a variable value</p>
-        </div>
-        <div class="bg-gray-700 rounded p-4 mb-4">
-          <code class="block text-amber-300 mb-1">query.variable('var_name')</code>
-          <p class="text-sm text-gray-300">Access a variable value</p>
-        </div>
-        <div class="bg-gray-700 rounded p-4 mb-4">
-          <code class="block text-amber-300 mb-1">math.sin(time * 0.1)</code>
-          <p class="text-sm text-gray-300">Use mathematical functions</p>
-        </div>
+        <h2 class="text-xl font-semibold text-cyan-300 mb-3">Code Management</h2>
+        <ul class="list-disc pl-5 space-y-2 mb-4">
+          <li><strong>Auto-save:</strong> Your code is automatically saved to browser storage</li>
+          <li><strong>Load Examples:</strong> Use the dropdown menu to load pre-made examples</li>
+          <li><strong>Copy Code:</strong> Copy your code to clipboard</li>
+          <li><strong>Share Link:</strong> Generate a shareable link with your code embedded (base64 encoded)</li>
+          <li>
+            <strong>Code Hints:</strong> Press <span class="bg-gray-600 px-1.5 py-0.5 rounded text-sm">Ctrl+Space</span> for autocomplete suggestions
+          </li>
+        </ul>
+      </section>
+
+      <section class="mb-8">
+        <h2 class="text-xl font-semibold text-cyan-300 mb-3">Example: Simple Terrain</h2>
         <div class="bg-gray-700 rounded p-4">
-          <code class="block text-amber-300 mb-1">variable.my_var = 1.0;</code>
-          <p class="text-sm text-gray-300">Set variable values</p>
+          <code class="block text-amber-300 text-xs leading-relaxed"
+            >v.scale = 0.005;<br />
+            v.elevation = q.noise(v.originx * v.scale, v.originz * v.scale) / 2 + 0.5;<br />
+            v.elevation = math.clamp(v.elevation, 0, 1);<br />
+            <br />
+            return v.elevation &lt; 0.4<br />
+            &nbsp;&nbsp;? { r: 0, g: 0.2, b: 0.8 } // Water<br />
+            &nbsp;&nbsp;: v.elevation &lt; 0.6<br />
+            &nbsp;&nbsp;? { r: 0.2, g: 0.8, b: 0.2 } // Grass<br />
+            &nbsp;&nbsp;: { r: 0.6, g: 0.5, b: 0.4 }; // Mountain</code
+          >
         </div>
       </section>
 
-      <section>
-        <h2 class="text-xl font-semibold text-cyan-300 mb-3">Tips</h2>
+      <section class="mb-8">
+        <h2 class="text-xl font-semibold text-cyan-300 mb-3">Tips & Best Practices</h2>
         <ul class="list-disc pl-5 space-y-2">
-          <li>Use the console for debugging output</li>
-          <li>Variables must be declared before use</li>
-          <li>Check the browser console for error messages</li>
-          <li>
-            Press
-            <span class="bg-gray-600 px-1.5 py-0.5 rounded text-sm">Ctrl+Space</span>
-            for code completion
-          </li>
+          <li>Start with <span class="text-cyan-400">World Size</span> = 256 or 512 for faster iteration, then increase for final renders</li>
+          <li>Use multiple noise octaves at different scales to create more interesting results (Fractional Brownian Motion)</li>
+          <li>Clamp values with <code class="text-amber-300">math.clamp()</code> to prevent out-of-range colors</li>
+          <li>Use <code class="text-amber-300">math.lerp()</code> to smoothly blend between two colors based on a condition</li>
+          <li>Comment your code to remember what each section does</li>
+          <li>Check the browser console (F12) for error messages if generation fails</li>
+          <li>Perlin noise is seeded, so you'll get the same output each time (reproducible)</li>
         </ul>
       </section>
     </div>
