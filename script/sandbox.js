@@ -1,20 +1,8 @@
 import p5 from "p5";
 
-// Pixel processing utilities
-function normalizePixels(pixelArray) {
-  const result = new Uint8ClampedArray(pixelArray.length * 4);
-  let resultIdx = 0;
-
-  for (let i = 0; i < pixelArray.length; i++) {
-    const pixel = pixelArray[i];
-    result[resultIdx++] = Math.round(pixel.r * 255);
-    result[resultIdx++] = Math.round(pixel.g * 255);
-    result[resultIdx++] = Math.round(pixel.b * 255);
-    result[resultIdx++] = 255;
-  }
-
-  return result;
-}
+// NOTE: We write pixels directly into a typed `Uint8ClampedArray`
+// to avoid creating many intermediate objects and to enable
+// transferring the buffer to the parent without copying.
 
 // Security utilities
 function createSecureEnvironment() {
@@ -124,16 +112,8 @@ function createUserFunction(userInput) {
   );
 }
 
-// Process pixel results
-function processPixelResult(colorResult) {
-  if (colorResult && typeof colorResult === "object") {
-    return { r: colorResult.r ?? 0, g: colorResult.g ?? 0, b: colorResult.b ?? 0 };
-  } else if (typeof colorResult === "number") {
-    const clampedColorResult = Math.max(0, Math.min(1, colorResult));
-    return { r: clampedColorResult, g: clampedColorResult, b: clampedColorResult };
-  }
-  return { r: 0, g: 0, b: 0 };
-}
+// Inline pixel result handling in the generation loop below to
+// avoid allocating small objects per-pixel.
 
 // Main message handler
 window.addEventListener("message", (event) => {
@@ -160,17 +140,37 @@ window.addEventListener("message", (event) => {
     const query = Object.freeze(createQueryLibrary(p5Instance));
     const userFunction = createUserFunction(userInput);
 
-    // Generate pixels
-    const pixelArray = [];
+    // Generate pixels into a typed array (RGBA per pixel)
+    const pixelCount = worldSize * worldSize;
+    const pixelArray = new Uint8ClampedArray(pixelCount * 4);
+    let writeIdx = 0;
 
     for (let y = 0; y < worldSize; y++) {
       for (let x = 0; x < worldSize; x++) {
         const colorResult = userFunction(x, y, math, query);
-        pixelArray.push(processPixelResult(colorResult));
+
+        let r = 0,
+          g = 0,
+          b = 0;
+
+        if (colorResult && typeof colorResult === "object") {
+          r = colorResult.r ?? 0;
+          g = colorResult.g ?? 0;
+          b = colorResult.b ?? 0;
+        } else if (typeof colorResult === "number") {
+          const v = Math.max(0, Math.min(1, colorResult));
+          r = g = b = v;
+        }
+
+        pixelArray[writeIdx++] = Math.round(r * 255);
+        pixelArray[writeIdx++] = Math.round(g * 255);
+        pixelArray[writeIdx++] = Math.round(b * 255);
+        pixelArray[writeIdx++] = 255; // alpha
       }
     }
 
-    window.parent.postMessage({ type: "pixelArray", message: normalizePixels(pixelArray) }, "*");
+    // Transfer the underlying buffer to the parent to avoid copying
+    window.parent.postMessage({ type: "pixelArray", message: pixelArray }, [pixelArray.buffer]);
   } catch (error) {
     window.parent.postMessage(
       {
