@@ -1,0 +1,9 @@
+User-agent: *
+Allow: /
+Disallow: /sandbox.html
+Disallow: /node_modules/
+
+Sitemap: https://thepixelmancer.github.io/perlin-fiddle/sitemap.xml
+
+# Crawl delay (optional, in seconds)
+Crawl-delay: 1
