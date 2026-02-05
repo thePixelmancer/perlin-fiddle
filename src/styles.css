@@ -11,3 +11,14 @@
 ::-webkit-scrollbar-thumb {
   @apply bg-gray-600 rounded-full;
 }
+
+/* Footer styles */
+.site-footer {
+  @apply bg-gray-900 text-gray-400 text-sm py-4 px-4 border-t border-gray-800;
+}
+.site-footer a {
+  @apply text-cyan-400 hover:text-cyan-300 underline;
+}
+.site-footer .links {
+  @apply flex gap-4 justify-center mt-2;
+}

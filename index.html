@@ -3,28 +3,34 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="description" content="Perlin Fiddle - Create Minecraft terrain, biomes, and procedural worlds with visual Perlin noise editor. Perfect for addon makers, mod developers, and educators." />
-    <meta name="keywords" content="Minecraft, procedural generation, terrain generator, Perlin noise, addon development, mod maker, world builder, noise visualizer, JavaScript, educational" />
+    <meta
+      name="description"
+      content="Perlin Fiddle - Create Minecraft terrain, biomes, and procedural worlds with visual Perlin noise editor. Perfect for addon makers, mod developers, and educators." />
+    <meta
+      name="keywords"
+      content="Minecraft, procedural generation, terrain generator, Perlin noise, addon development, mod maker, world builder, noise visualizer, JavaScript, educational" />
     <meta name="author" content="Perlin Fiddle" />
     <meta name="robots" content="index, follow" />
     <meta name="theme-color" content="#111827" />
     <link rel="canonical" href="https://thepixelmancer.github.io/perlin-fiddle/" />
-    
+
     <!-- Open Graph / Social Media -->
     <meta property="og:type" content="website" />
     <meta property="og:url" content="https://thepixelmancer.github.io/perlin-fiddle/" />
     <meta property="og:title" content="Perlin Fiddle - Minecraft Terrain Generator" />
-    <meta property="og:description" content="Create procedural terrain and visualizations for Minecraft addons and mods. Real-time Perlin noise editor for creators and educators." />
+    <meta
+      property="og:description"
+      content="Create procedural terrain and visualizations for Minecraft addons and mods. Real-time Perlin noise editor for creators and educators." />
     <meta property="og:image" content="https://thepixelmancer.github.io/perlin-fiddle/og-image.png" />
     <meta property="og:site_name" content="Perlin Fiddle" />
-    
+
     <!-- Twitter -->
     <meta property="twitter:card" content="summary_large_image" />
     <meta property="twitter:url" content="https://thepixelmancer.github.io/perlin-fiddle/" />
     <meta property="twitter:title" content="Perlin Fiddle - Minecraft Terrain Generator" />
     <meta property="twitter:description" content="Create procedural terrain for Minecraft addons and mods with an interactive Perlin noise editor." />
     <meta property="twitter:image" content="https://thepixelmancer.github.io/perlin-fiddle/og-image.png" />
-    
+
     <title>Perlin Fiddle - Minecraft Terrain & Procedural Generation Editor</title>
     <link rel="icon" type="image/png" href="favicon.png" />
     <link rel="apple-touch-icon" href="favicon.png" />
@@ -40,62 +46,61 @@
 
     <!-- JSON-LD Structured Data -->
     <script type="application/ld+json">
-    {
-      "@context": "https://schema.org",
-      "@type": "WebApplication",
-      "name": "Perlin Fiddle",
-      "description": "A real-time visual editor for procedural generation using Perlin noise and JavaScript - designed for Minecraft addon and mod makers, enthusiasts, and educators.",
-      "url": "https://thepixelmancer.github.io/perlin-fiddle",
-      "applicationCategory": ["Multimedia", "EducationalApplication"],
-      "offers": {
-        "@type": "Offer",
-        "price": "0",
-        "priceCurrency": "USD"
-      },
-      "creator": {
-        "@type": "Person",
-        "name": "Perlin Fiddle Contributors"
-      },
-      "image": "https://thepixelmancer.github.io/perlin-fiddle/og-image.png",
-      "audience": [
-        {
-          "@type": "Audience",
-          "audienceType": "Game Developers"
+      {
+        "@context": "https://schema.org",
+        "@type": "WebApplication",
+        "name": "Perlin Fiddle",
+        "description": "A real-time visual editor for procedural generation using Perlin noise and JavaScript - designed for Minecraft addon and mod makers, enthusiasts, and educators.",
+        "url": "https://thepixelmancer.github.io/perlin-fiddle",
+        "applicationCategory": ["Multimedia", "EducationalApplication"],
+        "offers": {
+          "@type": "Offer",
+          "price": "0",
+          "priceCurrency": "USD"
         },
-        {
-          "@type": "Audience",
-          "audienceType": "Minecraft Addon Creators"
+        "creator": {
+          "@type": "Person",
+          "name": "Perlin Fiddle Contributors"
         },
-        {
-          "@type": "Audience",
-          "audienceType": "Educators"
-        }
-      ],
-      "featureList": [
-        "Real-time procedural generation visualization",
-        "Perlin noise editor for terrain creation",
-        "Interactive code editor with syntax highlighting",
-        "Minecraft terrain and biome generation",
-        "Pattern and world visualization",
-        "Shareable links for collaboration",
-        "Pre-built code examples",
-        "Math library for custom algorithms",
-        "Grid overlay and canvas controls"
-      ],
-      "keywords": ["Minecraft", "procedural generation", "terrain generator", "Perlin noise", "addon development", "mod making", "educational"
-      ]
-    }
+        "image": "https://thepixelmancer.github.io/perlin-fiddle/og-image.png",
+        "audience": [
+          {
+            "@type": "Audience",
+            "audienceType": "Game Developers"
+          },
+          {
+            "@type": "Audience",
+            "audienceType": "Minecraft Addon Creators"
+          },
+          {
+            "@type": "Audience",
+            "audienceType": "Educators"
+          }
+        ],
+        "featureList": [
+          "Real-time procedural generation visualization",
+          "Perlin noise editor for terrain creation",
+          "Interactive code editor with syntax highlighting",
+          "Minecraft terrain and biome generation",
+          "Pattern and world visualization",
+          "Shareable links for collaboration",
+          "Pre-built code examples",
+          "Math library for custom algorithms",
+          "Grid overlay and canvas controls"
+        ],
+        "keywords": ["Minecraft", "procedural generation", "terrain generator", "Perlin noise", "addon development", "mod making", "educational"]
+      }
     </script>
   </head>
   <body>
-    <div id="main" class="flex flex-col md:flex-row md:h-screen bg-gray-900 text-gray-200 gap-3 p-3">
+    <div id="main" class="flex flex-col md:flex-row h-screen bg-gray-900 text-gray-200 gap-3 p-3">
       <div id="left-panel" class="flex flex-col gap-3 flex-1">
         <div id="canvas" class="relative w-full h-full min-h-[400px] rounded-md bg-gray-700">
           <div class="absolute inset-0 w-full h-full">
             <!-- p5 canvas will be inserted here -->
           </div>
         </div>
-        <div id="controls" class="flex items-center gap-3 h-24 bg-gray-800 rounded-md p-4">
+        <div id="controls" class="flex items-center gap-3 h-24 bg-gray-800 rounded-md p-4 text-xs md:text-base">
           <div class="flex flex-col gap-3 flex-2">
             <label for="worldSizeInput" class="mb-1 flex items-center gap-2">
               <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
@@ -178,7 +183,7 @@
         <div
           id="documentation"
           class="[&::-webkit-scrollbar]:w-2 [&::-webkit-scrollbar-track]:bg-gray-900 [&::-webkit-scrollbar-thumb]:bg-gray-600 [&::-webkit-scrollbar-thumb]:rounded-full hidden flex-1 overflow-auto bg-gray-800"></div>
-        <div id="button-group" class="flex gap-3 p-3">
+        <div id="button-group" class="flex gap-3 p-3 text-xs md:text-base">
           <button
             id="run-button"
             class="bg-cyan-600 hover:bg-cyan-700 active:scale-95 focus:outline-none rounded-md p-2 transition-all duration-150 ease-out hover:shadow-lg active:shadow-inner flex items-center gap-2">
@@ -249,5 +254,13 @@
     <script type="module" src="./script/main.js"></script>
     <!-- Hidden sandbox iframe for secure code execution -->
     <iframe id="sandbox-iframe" sandbox="allow-scripts allow-same-origin" style="display: none" src="sandbox.html"> </iframe>
+
+    <footer class="site-footer">
+      <div class="container mx-auto max-w-6xl text-center flex gap-4 items-center justify-center">
+        <span>© 2026 by Angelo (Pixelmancer). All rights reserved.</span>
+        <a href="https://thepixelmancer.github.io" target="_blank" rel="noopener noreferrer">Other tools</a>
+        <a href="https://github.com/thePixelmancer/perlin-fiddle" target="_blank" rel="noopener noreferrer">Project GitHub</a>
+      </div>
+    </footer>
   </body>
 </html>
