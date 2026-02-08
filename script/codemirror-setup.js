@@ -1,6 +1,6 @@
 // Define custom hints for autocomplete
 const customHints = [
-  { text: "q.noise(x, y)", displayText: "noise(x, y) - 2D perlin noise" },
+  { text: "q.noise(worldx, worldz)", displayText: "q.noise(worldx, worldz) - 2D perlin noise" },
   { text: "math.random(min,max)", displayText: "math.random(min, max) - Random number between min and max" },
   { text: "math.random_integer(min,max)", displayText: "math.random_integer(min, max) - Random integer between min and max" },
   { text: "math.lerp(start, stop, t)", displayText: "math.lerp(start, stop, 0 to 1) - Linear interpolation" },
