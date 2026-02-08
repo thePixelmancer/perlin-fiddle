@@ -183,11 +183,13 @@
             <span>Documentation</span>
           </button>
         </div>
+        <!-- CODE MIRROR -->
         <div id="code-input" class="flex-1 overflow-auto order-last md:order-none"></div>
+        <!-- DOCUMENTATION TAB -->
         <div
           id="documentation"
           class="[&::-webkit-scrollbar]:w-2 [&::-webkit-scrollbar-track]:bg-gray-900 [&::-webkit-scrollbar-thumb]:bg-gray-600 [&::-webkit-scrollbar-thumb]:rounded-full hidden flex-1 overflow-auto bg-gray-800"></div>
-        <div id="button-group" class="flex gap-3 p-3 text-xs md:text-base order-first md:order-none [&>*]:flex-1 md:[&>*]:flex-initial">
+        <div id="button-group" class="flex flex-wrap gap-3 p-3 text-xs md:text-base order-first md:order-none [&>*]:flex-1 md:[&>*]:flex-none">
           <button
             id="run-button"
             class="bg-cyan-600 hover:bg-cyan-700 active:scale-95 focus:outline-none rounded-md p-2 transition-all duration-150 ease-out hover:shadow-lg active:shadow-inner flex items-center gap-2">

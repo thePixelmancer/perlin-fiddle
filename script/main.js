@@ -22,6 +22,14 @@ const MOUSE_STATE = {
   lastY: 0,
 };
 
+// Touch state for pinch-zoom and touch panning
+const TOUCH_STATE = {
+  isPinching: false,
+  startDist: 0,
+  startZoom: 1,
+  center: { x: 0, y: 0 },
+};
+
 // Get the sandbox iframe
 const SANDBOX = document.getElementById("sandbox-iframe");
 
@@ -93,6 +101,15 @@ function imageFromArray(sketch, pixelArray) {
   return img;
 }
 
+// Convert a Touch object to canvas-local coordinates
+function getTouchPos(sketch, touch) {
+  const rect = sketch.canvas.getBoundingClientRect();
+  return {
+    x: touch.clientX - rect.left,
+    y: touch.clientY - rect.top,
+  };
+}
+
 // Draw grid overlay that moves and zooms with content
 function drawGrid(sketch, imageSize) {
   const gridSize =
@@ -140,6 +157,102 @@ new p5((sketch) => {
       .createCanvas(canvasDiv.offsetWidth, canvasDiv.offsetHeight)
       .parent(canvasDiv);
     sketch.noSmooth();
+
+    // Attach touch listeners to support single-finger pan and two-finger pinch-to-zoom
+    const canvasEl = sketch.canvas;
+
+    canvasEl.addEventListener(
+      "touchstart",
+      (e) => {
+        if (!e.touches) return;
+
+        if (e.touches.length === 1) {
+          // Start panning with one finger
+          const pos = getTouchPos(sketch, e.touches[0]);
+          MOUSE_STATE.isDragging = true;
+          MOUSE_STATE.lastX = pos.x;
+          MOUSE_STATE.lastY = pos.y;
+        } else if (e.touches.length === 2) {
+          // Start pinch
+          MOUSE_STATE.isDragging = false;
+          TOUCH_STATE.isPinching = true;
+          const p1 = getTouchPos(sketch, e.touches[0]);
+          const p2 = getTouchPos(sketch, e.touches[1]);
+          TOUCH_STATE.startDist = Math.hypot(p2.x - p1.x, p2.y - p1.y);
+          TOUCH_STATE.startZoom = CAMERA.zoom;
+          TOUCH_STATE.center = { x: (p1.x + p2.x) / 2, y: (p1.y + p2.y) / 2 };
+        }
+
+        // Prevent page from scrolling while interacting with the canvas
+        e.preventDefault();
+      },
+      { passive: false },
+    );
+
+    canvasEl.addEventListener(
+      "touchmove",
+      (e) => {
+        if (!e.touches) return;
+
+        if (TOUCH_STATE.isPinching && e.touches.length >= 2) {
+          const p1 = getTouchPos(sketch, e.touches[0]);
+          const p2 = getTouchPos(sketch, e.touches[1]);
+          const newDist = Math.hypot(p2.x - p1.x, p2.y - p1.y);
+
+          if (TOUCH_STATE.startDist > 0) {
+            const oldZoom = CAMERA.zoom;
+            let newZoom = TOUCH_STATE.startZoom * (newDist / TOUCH_STATE.startDist);
+            newZoom = Math.max(0.1, Math.min(newZoom, 50));
+            CAMERA.zoom = newZoom;
+
+            // Zoom towards the current midpoint of the touches
+            const midX = (p1.x + p2.x) / 2;
+            const midY = (p1.y + p2.y) / 2;
+
+            const zoomChange = CAMERA.zoom - oldZoom;
+            if (oldZoom !== 0) {
+              CAMERA.x -= (midX - CAMERA.x) * (zoomChange / oldZoom);
+              CAMERA.y -= (midY - CAMERA.y) * (zoomChange / oldZoom);
+            }
+          }
+
+          e.preventDefault();
+        } else if (MOUSE_STATE.isDragging && e.touches.length === 1) {
+          // Single-finger pan
+          const pos = getTouchPos(sketch, e.touches[0]);
+          const deltaX = pos.x - MOUSE_STATE.lastX;
+          const deltaY = pos.y - MOUSE_STATE.lastY;
+
+          CAMERA.x += deltaX;
+          CAMERA.y += deltaY;
+
+          MOUSE_STATE.lastX = pos.x;
+          MOUSE_STATE.lastY = pos.y;
+
+          e.preventDefault();
+        }
+      },
+      { passive: false },
+    );
+
+    canvasEl.addEventListener("touchend", (e) => {
+      if (!e.touches || e.touches.length === 0) {
+        MOUSE_STATE.isDragging = false;
+        TOUCH_STATE.isPinching = false;
+      } else if (e.touches.length === 1) {
+        // If one touch remains, switch to pan mode
+        const pos = getTouchPos(sketch, e.touches[0]);
+        MOUSE_STATE.isDragging = true;
+        MOUSE_STATE.lastX = pos.x;
+        MOUSE_STATE.lastY = pos.y;
+        TOUCH_STATE.isPinching = false;
+      }
+    });
+
+    canvasEl.addEventListener("touchcancel", (e) => {
+      MOUSE_STATE.isDragging = false;
+      TOUCH_STATE.isPinching = false;
+    });
   };
 
   sketch.draw = () => {
