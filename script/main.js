@@ -112,8 +112,7 @@ function getTouchPos(sketch, touch) {
 
 // Draw grid overlay that moves and zooms with content
 function drawGrid(sketch, imageSize) {
-  const gridSize =
-    parseInt(document.getElementById("gridSizeInput").value) || imageSize;
+  const gridSize = parseInt(document.getElementById("gridSizeInput").value) || imageSize;
   const gridColor = document.getElementById("gridColorInput").value;
 
   // Convert hex color to RGB
@@ -149,13 +148,26 @@ function drawGrid(sketch, imageSize) {
   sketch.pop();
 }
 
+// Draw debug info overlay showing coordinates, size, camera position, and zoom level
+function drawDebugInfo(sketch, imageData) {
+  // Calculate mouse coordinates relative to image
+  const imageX = (sketch.mouseX - CAMERA.x) / CAMERA.zoom;
+  const imageY = (sketch.mouseY - CAMERA.y) / CAMERA.zoom;
+
+  sketch.textSize(12);
+  sketch.textAlign(sketch.LEFT, sketch.TOP);
+  sketch.fill(255);
+  sketch.noStroke();
+  const debugText = `Pos: (${Math.floor(imageX)}, ${Math.floor(imageY)})
+Zoom: ${CAMERA.zoom.toFixed(2)}x`;
+  sketch.text(debugText, 10, 10);
+}
+
 // Initialize p5
 new p5((sketch) => {
   sketch.setup = () => {
     const canvasDiv = document.querySelector("#canvas > div");
-    sketch
-      .createCanvas(canvasDiv.offsetWidth, canvasDiv.offsetHeight)
-      .parent(canvasDiv);
+    sketch.createCanvas(canvasDiv.offsetWidth, canvasDiv.offsetHeight).parent(canvasDiv);
     sketch.noSmooth();
 
     // Attach touch listeners to support single-finger pan and two-finger pinch-to-zoom
@@ -263,10 +275,7 @@ new p5((sketch) => {
     if (SKETCH_CONTENT.pixelArray && SKETCH_CONTENT.pixelArray.length > 0) {
       // Create cached image if it doesn't exist
       if (!SKETCH_CONTENT.cachedImage) {
-        SKETCH_CONTENT.cachedImage = imageFromArray(
-          sketch,
-          SKETCH_CONTENT.pixelArray,
-        );
+        SKETCH_CONTENT.cachedImage = imageFromArray(sketch, SKETCH_CONTENT.pixelArray);
       }
 
       const imageData = SKETCH_CONTENT.cachedImage;
@@ -285,6 +294,9 @@ new p5((sketch) => {
 
         // Draw grid overlay
         drawGrid(sketch, imageData.width);
+
+        // Draw debug info
+        drawDebugInfo(sketch, imageData);
       }
     }
 
@@ -305,11 +317,7 @@ new p5((sketch) => {
 
   // Mouse wheel for zoom
   sketch.mouseWheel = (event) => {
-    const isOverCanvas =
-      sketch.mouseX >= 0 &&
-      sketch.mouseX <= sketch.width &&
-      sketch.mouseY >= 0 &&
-      sketch.mouseY <= sketch.height;
+    const isOverCanvas = sketch.mouseX >= 0 && sketch.mouseX <= sketch.width && sketch.mouseY >= 0 && sketch.mouseY <= sketch.height;
 
     if (isOverCanvas) {
       const zoomSpeed = 0.4;
@@ -329,11 +337,7 @@ new p5((sketch) => {
 
   // Mouse events for panning
   sketch.mousePressed = () => {
-    const isOverCanvas =
-      sketch.mouseX >= 0 &&
-      sketch.mouseX <= sketch.width &&
-      sketch.mouseY >= 0 &&
-      sketch.mouseY <= sketch.height;
+    const isOverCanvas = sketch.mouseX >= 0 && sketch.mouseX <= sketch.width && sketch.mouseY >= 0 && sketch.mouseY <= sketch.height;
 
     if (isOverCanvas) {
       MOUSE_STATE.isDragging = true;
@@ -367,8 +371,7 @@ new p5((sketch) => {
 /* -------------------------------------------------------------------------- */
 // Set up the run button
 document.getElementById("run-button")?.addEventListener("click", () => {
-  const worldSize =
-    parseInt(document.getElementById("worldSizeInput").value) || 512;
+  const worldSize = parseInt(document.getElementById("worldSizeInput").value) || 512;
   const codeEditorText = window.editor.getValue();
 
   if (window.editor) {
