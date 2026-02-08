@@ -155,7 +155,7 @@
       <div id="right-panel" class="flex flex-col bg-gray-800 flex-1 rounded-md">
         <div id="tabs" class="flex border-b border-gray-700">
           <button
-            class="flex-1 tab-button px-16 py-3 text-sm font-medium text-cyan-400 border-b-2 border-cyan-400 hover:text-gray-300 focus:outline-none flex items-center justify-center gap-2">
+            class="flex-1 tab-button py-3 text-sm font-medium text-cyan-400 border-b-2 border-cyan-400 hover:text-gray-300 focus:outline-none flex items-center justify-center gap-2">
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
               <path
                 stroke-linecap="round"
@@ -165,7 +165,7 @@
             <span>Molang Editor</span>
           </button>
           <button
-            class="flex-1 tab-button px-16 py-3 text-sm font-medium text-gray-400 border-b-2 border-transparent hover:text-gray-300 focus:outline-none flex items-center justify-center gap-2">
+            class="flex-1 tab-button py-3 text-sm font-medium text-gray-400 border-b-2 border-transparent hover:text-gray-300 focus:outline-none flex items-center justify-center gap-2">
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
               <path
                 stroke-linecap="round"
@@ -176,11 +176,11 @@
             <span>Documentation</span>
           </button>
         </div>
-        <div id="code-input" class="flex-1 overflow-auto"></div>
+        <div id="code-input" class="flex-1 overflow-auto order-last md:order-none"></div>
         <div
           id="documentation"
           class="[&::-webkit-scrollbar]:w-2 [&::-webkit-scrollbar-track]:bg-gray-900 [&::-webkit-scrollbar-thumb]:bg-gray-600 [&::-webkit-scrollbar-thumb]:rounded-full hidden flex-1 overflow-auto bg-gray-800"></div>
-        <div id="button-group" class="flex gap-3 p-3 text-xs md:text-base">
+        <div id="button-group" class="flex gap-3 p-3 text-xs md:text-base order-first md:order-none [&>*]:flex-1 md:[&>*]:flex-initial">
           <button
             id="run-button"
             class="bg-cyan-600 hover:bg-cyan-700 active:scale-95 focus:outline-none rounded-md p-2 transition-all duration-150 ease-out hover:shadow-lg active:shadow-inner flex items-center gap-2">
@@ -221,7 +221,7 @@
           </button>
           <select
             id="exampleSelect"
-            class="bg-gray-900 outline-1 outline-gray-700 hover:outline-gray-500 active:scale-[0.98] rounded-md p-2 pr-8 appearance-none cursor-pointer transition-all duration-150 ease-out hover:shadow-lg active:shadow-inner">
+            class="bg-gray-900 outline-1 outline-gray-700 hover:outline-gray-500 active:scale-[0.98] rounded-md p-2 appearance-none cursor-pointer transition-all duration-150 ease-out hover:shadow-lg active:shadow-inner">
             <option value="">Load Example...</option>
           </select>
         </div>
