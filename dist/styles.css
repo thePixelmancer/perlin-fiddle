@@ -296,11 +296,17 @@
   .h-24 {
     height: calc(var(--spacing) * 24);
   }
+  .h-\[calc\(100vh-theme\(spacing\.24\)\)\] {
+    height: calc(100vh - 6rem);
+  }
   .h-full {
     height: 100%;
   }
   .h-screen {
     height: 100vh;
+  }
+  .max-h-\[60vh\] {
+    max-height: 60vh;
   }
   .max-h-full {
     max-height: 100%;
@@ -316,6 +322,9 @@
   }
   .flex-1 {
     flex: 1;
+  }
+  .flex-2 {
+    flex: 2;
   }
   .border-collapse {
     border-collapse: collapse;
@@ -651,6 +660,16 @@
   .md\:order-none {
     @media (width >= 48rem) {
       order: 0;
+    }
+  }
+  .md\:h-screen {
+    @media (width >= 48rem) {
+      height: 100vh;
+    }
+  }
+  .md\:max-h-none {
+    @media (width >= 48rem) {
+      max-height: none;
     }
   }
   .md\:flex-row {

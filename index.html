@@ -93,7 +93,7 @@
     </script>
   </head>
   <body>
-    <div id="main" class="flex flex-col md:flex-row h-screen bg-gray-900 text-gray-200 gap-3 p-3">
+    <div id="main" class="flex flex-col md:flex-row md:h-screen bg-gray-900 text-gray-200 gap-3 p-3">
       <div id="left-panel" class="flex flex-col gap-3 flex-1">
         <div id="canvas" class="relative w-full h-full min-h-[400px] rounded-md bg-gray-700">
           <div class="absolute inset-0 w-full h-full">
@@ -227,6 +227,14 @@
         </div>
       </div>
     </div>
+    <footer class="site-footer">
+      <div class="container mx-auto max-w-6xl text-center flex gap-4 items-center justify-center">
+        <span>2026</span>
+        <span>Made by Angelo (Pixelmancer). Licensed under the MIT licence.</span>
+        <a href="https://thepixelmancer.github.io" target="_blank" rel="noopener noreferrer">Other tools</a>
+        <a href="https://github.com/thePixelmancer/perlin-fiddle" target="_blank" rel="noopener noreferrer">Project GitHub</a>
+      </div>
+    </footer>
     <!-- CodeMirror JS -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/codemirror.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/mode/javascript/javascript.min.js"></script>
@@ -251,14 +259,5 @@
     <script type="module" src="./script/main.js"></script>
     <!-- Hidden sandbox iframe for secure code execution -->
     <iframe id="sandbox-iframe" sandbox="allow-scripts allow-same-origin" style="display: none" src="sandbox.html"> </iframe>
-
-    <footer class="site-footer">
-      <div class="container mx-auto max-w-6xl text-center flex gap-4 items-center justify-center">
-        <span>2026</span>
-        <span>Made by Angelo (Pixelmancer). Licensed under the MIT licence.</span>
-        <a href="https://thepixelmancer.github.io" target="_blank" rel="noopener noreferrer">Other tools</a>
-        <a href="https://github.com/thePixelmancer/perlin-fiddle" target="_blank" rel="noopener noreferrer">Project GitHub</a>
-      </div>
-    </footer>
   </body>
 </html>
