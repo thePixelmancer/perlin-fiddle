@@ -256,7 +256,8 @@ new p5((sketch) => {
   };
 
   sketch.draw = () => {
-    sketch.background(0);
+    sketch.background(31, 39, 55); // Tailwind bg-gray-800
+    // Add pattern drawing logic here if needed
 
     // Draw image if pixelArray exists and has data
     if (SKETCH_CONTENT.pixelArray && SKETCH_CONTENT.pixelArray.length > 0) {
