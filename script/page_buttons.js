@@ -57,33 +57,27 @@ document.addEventListener("DOMContentLoaded", () => {
     if (!exampleSelect) return;
 
     try {
-      // Fetch the directory listing to get all .js files
-      const response = await fetch("./fiddles/");
-      if (!response.ok) {
-        throw new Error("Failed to fetch directory");
-      }
-      
-      const html = await response.text();
-      
-      // Parse the HTML to extract file names
-      const parser = new DOMParser();
-      const doc = parser.parseFromString(html, "text/html");
-      
-      // Get all links that end with .js
-      const links = doc.querySelectorAll('a[href$=".js"]');
-      const examples = Array.from(links)
-        .map(link => link.getAttribute('href'))
-        .filter(href => href && href.endsWith('.js'))
-        .map(href => href.split('/').pop()); // Get just the filename
+      // Hardcoded list of available fiddles for GitHub Pages compatibility
+      // This avoids relying on directory listings which don't work on GitHub Pages
+      const availableFiddles = [
+        "damascus.js",
+        "dungeon.js", 
+        "hex_grid.js",
+        "mountain_slopes.js",
+        "ridges.js",
+        "scattered_islands.js",
+        "shaded_mountain.js",
+        "terrain.js"
+      ];
 
       // Clear existing options except the first one
       exampleSelect.innerHTML = '<option value="">Load Example...</option>';
 
       // Sort examples alphabetically
-      examples.sort();
+      availableFiddles.sort();
 
       // Add each example to the dropdown
-      for (const example of examples) {
+      for (const example of availableFiddles) {
         try {
           const response = await fetch(`./fiddles/${example}`);
           if (response.ok) {
