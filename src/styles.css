@@ -3,6 +3,8 @@
 @import "tailwindcss/preflight.css" layer(base);
 @import "tailwindcss/utilities.css" layer(utilities);
 
+@import "./ore_ui/ore_ui.css"  layer(components);;
+
 /* Webkit scrollbar styles */
 ::-webkit-scrollbar {
   @apply w-2 bg-gray-900;
